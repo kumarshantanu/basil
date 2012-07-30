@@ -29,8 +29,8 @@ _dynamic data_. Few examples:
 "foo <% (inc num) %> bar" | {:inc inc :num 45} | "foo 46 bar"
 ```
 
-Use `basil.core/parse-compile` to parse and compile a template.
-Use `basil.core/render-template` to render a compiled template.
+Use `basil.core/parse-compile` to parse and compile a template and use
+`basil.core/render-template` to render a compiled template.
 
 
 ### Template Groups
@@ -42,6 +42,13 @@ template can include an entire template dynamically using
 Use `basil.jvm/make-group-from-dir` and `basil.jvm/make-group-from-classpath`
 to create template groups. Use `basil.core/render-by-name` to render a template
 in a group.
+
+
+## Getting in touch
+
+By e-mail: kumar.shantanu(at)gmail.com
+
+On Twitter: [@kumarshantanu](http://twitter.com/kumarshantanu)
 
 
 ## License
