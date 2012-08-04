@@ -39,9 +39,9 @@ Template groups can be created from directory or classpath. A slot in one
 template can include an entire template dynamically using
 `<% (include "foo.basil") %>`.
 
-Use `basil.jvm/make-group-from-dir` and `basil.jvm/make-group-from-classpath`
-to create template groups. Use `basil.core/render-by-name` to render a template
-in a group.
+Use `basil.jvm/make-group-from-directory` and
+`basil.jvm/make-group-from-classpath` to create template groups. Use
+`basil.core/render-by-name` to render a template from a group.
 
 
 ## Getting in touch

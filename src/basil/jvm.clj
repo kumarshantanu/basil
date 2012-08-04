@@ -30,8 +30,8 @@
          args))
 
 
-(defn make-group-from-dir
-  "Create a template group from the filesystem.
+(defn make-group-from-directory
+  "Create a template group from a filesystem directory.
   Optional arguments:
    prefix (string)     this text is prefixed to the template name before lookup
    cache-millis (long) how long to cache template (default: 0 disables caching)"
