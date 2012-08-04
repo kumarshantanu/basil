@@ -1,6 +1,7 @@
 (ns basil.lib
   "Library of filter/handler functions"
   (:require [basil.group    :as group]
+            [basil.util     :as util]
             [clojure.string :as str]))
 
 
@@ -10,6 +11,84 @@
   (reduce (fn [m [n v]]
             (merge m {(keyword n) (deref v)}))
           {} (filter first (ns-publics 'clojure.core))))
+
+
+(defn auto-str
+  "Automaticlly convert `x` to appropriate representation of string."
+  [x]
+  (cond (string? x) x
+        (coll? x)   (->> (map auto-str x)
+                      (str/join \newline))
+        (seq? x)    (->> (map auto-str x)
+                      (str/join \newline))
+        :otherwise  (str x)))
+
+
+(defn entities
+  "Given a map `m` and a string `x`, replace every character in `x` by looking
+  up in `m`, combine the result as a string and return it."
+  [m x] {:pre [(map? m)
+               (string? x)]}
+  (->> (seq x)
+    (map #(get m x %))
+    (util/redstr)))
+
+
+(def html-entities-map
+  {"&" "&amp;"    ;Ampersand	0026
+   "<" "&lt;"     ;Less than	003C
+   ">" "&gt;"     ;Greater than	003E
+   ;; ""  "&nbsp;"   ;Non-breaking space	00A0 (non-effective, key is empty)
+   "¢" "&cent;"   ;Cent	00A2
+   "£" "&pound;"  ;Pound	00A3
+   "©" "&copy;"   ;Copyright	00A9
+   "«" "&laquo;"  ;Left-pointing double angle quotation mark	00AB
+   "®" "&reg;"    ;Registered trademark	00AE
+   "°" "&deg;"    ;Degree	00B0
+   "·" "&middot;" ;Middle dot	00B7
+   "»" "&raquo;"  ;Right-pointing double angle quotation mark	00BB
+   "½" "&frac12;" ;Vulgar fraction one half	00BD
+   "×" "&times;"  ;Multiplication	00D7
+   "÷" "&divide;" ;Division	00F7
+   "–" "&ndash;"  ;En dash	2013
+   "—" "&mdash;"  ;Em dash	2014
+   "‘" "&lsquo;"  ;Left single quotation mark	2018
+   "’" "&rsquo;"  ;Right single quotation mark	2019
+   "“" "&ldquo;"  ;Left double quotation mark	201C
+   "”" "&rdquo;"  ;Right double quotation mark	201D
+   "•" "&bull;"   ;Bullet	2022
+   "…" "&hellip;" ;Horizontal ellipsis	2026
+   "€" "&euro;"   ;Euro	20AC
+   "™" "&trade;"  ;Trademark	2122
+   "←" "&larr;"   ;Leftwards arrow	2190
+   "↑" "&uarr;"   ;Upwards arrow	2191
+   "→" "&rarr;"   ;Rightwards arrow	2192
+   "↓" "&darr;"   ;Downwards arrow	2193
+   })
+
+
+(def html-entities (merge html-entities-map
+                          (reduce (fn [m [k v]]
+                                    (merge m {k v}))
+                                  {} html-entities-map)))
+
+
+(def nbsp-entities (merge html-entities
+                          {" " "&nbsp;"} ;; in CLJS, chars are string (dup keys)
+                          {(first " ") "&nbsp;"}))
+
+
+(defn html-safe
+  "Given a string `x`, return HTML-safe version of `x`."
+  [x] {:pre [(string? x)]}
+  (entities html-entities x))
+
+
+(defn html-nbsp
+  "Given a string `x`, return HTML-safe version of `x` such that spaces are
+  converted to &nbsp;."
+  [x] {:pre [(string? x)]}
+  (entities nbsp-entities x))
 
 
 (defn for-each
@@ -56,22 +135,30 @@
                     serial (partition 2 (flatten (repeat decors-format))))))
 
 
-(def ^{:doc "Default handler functions"}
+(def ^{:doc "Default filter functions"}
   default-handlers
-  {:default     str
+  {;; generic string conversion
+   :auto-str    auto-str
+   :default     auto-str
+   :str         str
+   :str-join    str/join
+   :str-newline (partial str/join "\n")
+   ;; conditionals
    :when        (fn [test f & more] (when     test (apply f more)))
    :when-not    (fn [test f & more] (when-not test (apply f more)))
    :for-each    (fn [k-bindings f & more] (for-each k-bindings f more))
+   ;; formatting
    :format-rows (fn [rows decor & more]
                   (format-rows rows (into [decor] more)))
    :serial-rows (fn [rows serial decor-format & more]
                   (serial-rows rows serial
                                (into [decor-format] more)))
-   :str         str
-   :str-join    str/join
-   :str-newline (partial str/join "\n")
    :html-tr     (fn [rows] (format-rows rows "<tr>" "</tr>\n"))
    :html-li     (fn [rows] (format-rows rows "<li>" "</li>\n"))
+   ;; HTML-escaping
+   :html-safe   html-safe
+   :html-nbsp   html-nbsp
+   ;; including other templates
    :include     group/render-by-name*})
 
 
