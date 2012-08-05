@@ -33,35 +33,35 @@ _dynamic data_. Few examples:
     <td>foo bar</td>
   </tr>
   <tr>
-    <td>foo &lt;% num %\&gt; bar</td>
+    <td>foo &lt;% num %&gt; bar</td>
     <td>{:num 45}</td>
     <td>foo 45 bar</td>
   </tr>
   <tr>
-    <td>foo &lt;% (inc num) %\&gt; bar</td>
+    <td>foo &lt;% (inc num) %&gt; bar</td>
     <td>{:inc inc :num 45}</td>
     <td>foo 46 bar</td>
   </tr>
   <tr>
     <td><pre>foo
-<% (str-join "\n"
+&lt;% (str-join "\n"
      (for-each [:a [1 2]
                 :b names]
        str ":a=" :a
-           ", name=" :b) %>
+           ", name=" :b) %&gt;
 bar</pre></td>
     <td><pre>{:names ["Tom"
          "Jane"
          "Larry"]}</pre>
     </td>
-    <td>foo
-:a=1, name=Tom<br/>
-:a=1, name=Jane<br/>
-:a=1, name=Larry<br/>
-:a=2, name=Tom<br/>
-:a=2, name=Jane<br/>
-:a=2, name=Larry<br/>
-bar
+    <td><pre>foo
+:a=1, name=Tom
+:a=1, name=Jane
+:a=1, name=Larry
+:a=2, name=Tom
+:a=2, name=Jane
+:a=2, name=Larry
+bar</pre>
     </td>
   </tr>
 </table>
