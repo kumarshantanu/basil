@@ -21,23 +21,65 @@ composed of distinct, interleaved and non-nested _static-text_ and _slots_. The
 _slots_ contain limited Clojure forms to express the _filter-functions_ and
 _dynamic data_. Few examples:
 
+<table>
+  <tr>
+    <th>Template</th>
+    <th>Clojure data</th>
+    <th>Result</th>
+  </tr>
+  <tr>
+    <td>`foo bar`</td>
+    <td>
+```clojure
+{}
 ```
-   Template                  | Clojure data       | Result
------------------------------|--------------------|-----------
-"foo bar"                    | {}                 | "foo bar"
-                             |                    |
-"foo <% num %> bar"          | {:num 45}          | "foo 45 bar"
-                             |                    |
-"foo <% (inc num) %> bar"    | {:inc inc :num 45} | "foo 46 bar"
-                             |                    |
-"foo                         | {:names ["Tom"     | "foo
- <% (str-join "\n"           |          "Jane"    | :a=1, name=Tom
-      (for-each [:a [1 2]    |          "Larry"]} | :a=1, name=Jane
-                 :b names]   |                    | :a=1, name=Larry
-        str ":a=" :a         |                    | :a=2, name=Tom
-            ", name=" :b) %> |                    | :a=2, name=Jane
- bar"                        |                    | :a=2, name=Larry"
+    </td>
+    <td>`foo bar</td>
+  </tr>
+  <tr>
+    <td>`foo <% num %> bar`</td>
+    <td>
+```clojure
+{:num 45}
 ```
+    </td>
+    <td>foo 45 bar</td>
+  </tr>
+  <tr>
+    <td>`foo <% (inc num) %> bar`</td>
+    <td>
+```clojure
+{:inc inc :num 45}
+```
+    </td>
+    <td>`foo 46 bar`</td>
+  </tr>
+  <tr>
+    <td>`foo
+<% (str-join "\n"
+     (for-each [:a [1 2]
+                :b names]
+       str ":a=" :a
+           ", name=" :b) %>
+bar</td>
+    <td>
+```clojure
+{:names ["Tom"
+         "Jane"
+         "Larry"]}
+```
+    </td>
+    <td>foo
+:a=1, name=Tom
+:a=1, name=Jane
+:a=1, name=Larry
+:a=2, name=Tom
+:a=2, name=Jane
+:a=2, name=Larry
+bar
+    </td>
+  </tr>
+</table>
 
 Use `basil.core/parse-compile` to parse and compile a template and use
 `basil.core/render-template` to render a compiled template.
