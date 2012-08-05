@@ -51,7 +51,7 @@ _dynamic data_. Few examples:
     <td><pre>foo
 &lt;% (when-not (seq names) identity "No names!") %&gt;
 bar</pre></td>
-    <td>{:names ["Lucy" "Brian"]}</td>
+    <td>{:names []}</td>
     <td>foo<br/>
 No names!<br/>
 bar</td>
