@@ -152,6 +152,7 @@
    :default     auto-str
    :identity    identity
    :partial     partial
+   :seq         seq
    :str         str
    :str-join    str/join
    :str-br      (partial str/join "<br/>\n")
