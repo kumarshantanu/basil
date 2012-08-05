@@ -28,31 +28,31 @@ _dynamic data_. Few examples:
     <th>Result</th>
   </tr>
   <tr>
-    <td>`foo bar`</td>
-    <td>`{}`</td>
-    <td>`foo bar`</td>
+    <td>foo bar</td>
+    <td>{}</td>
+    <td>foo bar</td>
   </tr>
   <tr>
-    <td>foo \<% num %\> bar</td>
+    <td>foo &lt;% num %\&gt; bar</td>
     <td>{:num 45}</td>
     <td>foo 45 bar</td>
   </tr>
   <tr>
-    <td>foo \<% (inc num) %\> bar</td>
+    <td>foo &lt;% (inc num) %\&gt; bar</td>
     <td>{:inc inc :num 45}</td>
-    <td>`foo 46 bar`</td>
+    <td>foo 46 bar</td>
   </tr>
   <tr>
-    <td>`foo
-\<% (str-join "\n"
+    <td><pre>foo
+<% (str-join "\n"
      (for-each [:a [1 2]
                 :b names]
        str ":a=" :a
            ", name=" :b) %>
-bar</td>
-    <td>{:names ["Tom"
+bar</pre></td>
+    <td><pre>{:names ["Tom"
          "Jane"
-         "Larry"]}
+         "Larry"]}</pre>
     </td>
     <td>foo
 :a=1, name=Tom<br/>
