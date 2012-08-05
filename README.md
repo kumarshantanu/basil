@@ -48,10 +48,10 @@ _dynamic data_. Few examples:
     <td>foo 47 bar</td>
   </tr>
   <tr>
-    <td>foo
+    <td><pre>foo
 &lt;% (when-not (seq names) identity "No names!") %&gt;
 &lt;% (when (seq names) str-br names) %&gt;
-bar</td>
+bar</pre></td>
     <td>{:names ["Lucy" "Brian"]}</td>
     <td>foo
 Lucy&lt;br/&gt;<br/>
