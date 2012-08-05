@@ -150,8 +150,11 @@
   {;; generic string conversion
    :auto-str    auto-str
    :default     auto-str
+   :identity    identity
+   :partial     partial
    :str         str
    :str-join    str/join
+   :str-br      (partial str/join "<br/>\n")
    :str-newline (partial str/join "\n")
    ;; conditionals
    :when        (fn [test f & more] (when     test (apply f more)))
