@@ -43,12 +43,16 @@ _dynamic data_. Few examples:
     <td>foo 46 bar</td>
   </tr>
   <tr>
+    <td>foo &lt;% (inc (inc num)) %&gt; bar</td>
+    <td>{:inc inc :num 45}</td>
+    <td>foo 47 bar</td>
+  </tr>
+  <tr>
     <td><pre>foo
-&lt;% (str-join "\n"
-     (for-each [:a [1 2]
-                :b names]
-       str ":a=" :a
-           ", name=" :b) %&gt;
+&lt;% (for-each [:a [1 2]
+              :b names]
+     str ":a=" :a
+         ", name=" :b) %&gt;
 bar</pre></td>
     <td><pre>{:names ["Tom"
          "Jane"
