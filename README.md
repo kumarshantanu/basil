@@ -76,7 +76,7 @@ name=Tom<br/>
 name=Jane<br/>
 name=Larry<br/>
 bar</td>
-  <tr/>
+  </tr>
   <tr>
     <td><pre>foo
 &lt;% (for-each [:a [1 2]
