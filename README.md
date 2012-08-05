@@ -29,49 +29,38 @@ _dynamic data_. Few examples:
   </tr>
   <tr>
     <td>`foo bar`</td>
-    <td>```clojure
-{}
-```
-    </td>
-    <td>`foo bar</td>
+    <td>`{}`</td>
+    <td>`foo bar`</td>
   </tr>
   <tr>
-    <td>`foo <% num %> bar`</td>
-    <td>```clojure
-{:num 45}
-```
-    </td>
+    <td>foo \<% num %\> bar</td>
+    <td>{:num 45}</td>
     <td>foo 45 bar</td>
   </tr>
   <tr>
-    <td>`foo <% (inc num) %> bar`</td>
-    <td>```clojure
-{:inc inc :num 45}
-```
-    </td>
+    <td>foo \<% (inc num) %\> bar</td>
+    <td>{:inc inc :num 45}</td>
     <td>`foo 46 bar`</td>
   </tr>
   <tr>
     <td>`foo
-<% (str-join "\n"
+\<% (str-join "\n"
      (for-each [:a [1 2]
                 :b names]
        str ":a=" :a
            ", name=" :b) %>
 bar</td>
-    <td>```clojure
-{:names ["Tom"
+    <td>{:names ["Tom"
          "Jane"
          "Larry"]}
-```
     </td>
     <td>foo
-:a=1, name=Tom
-:a=1, name=Jane
-:a=1, name=Larry
-:a=2, name=Tom
-:a=2, name=Jane
-:a=2, name=Larry
+:a=1, name=Tom<br/>
+:a=1, name=Jane<br/>
+:a=1, name=Larry<br/>
+:a=2, name=Tom<br/>
+:a=2, name=Jane<br/>
+:a=2, name=Larry<br/>
 bar
     </td>
   </tr>
