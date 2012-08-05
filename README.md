@@ -29,8 +29,7 @@ _dynamic data_. Few examples:
   </tr>
   <tr>
     <td>`foo bar`</td>
-    <td>
-```clojure
+    <td>```clojure
 {}
 ```
     </td>
@@ -38,8 +37,7 @@ _dynamic data_. Few examples:
   </tr>
   <tr>
     <td>`foo <% num %> bar`</td>
-    <td>
-```clojure
+    <td>```clojure
 {:num 45}
 ```
     </td>
@@ -47,8 +45,7 @@ _dynamic data_. Few examples:
   </tr>
   <tr>
     <td>`foo <% (inc num) %> bar`</td>
-    <td>
-```clojure
+    <td>```clojure
 {:inc inc :num 45}
 ```
     </td>
@@ -62,8 +59,7 @@ _dynamic data_. Few examples:
        str ":a=" :a
            ", name=" :b) %>
 bar</td>
-    <td>
-```clojure
+    <td>```clojure
 {:names ["Tom"
          "Jane"
          "Larry"]}
