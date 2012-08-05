@@ -50,14 +50,32 @@ _dynamic data_. Few examples:
   <tr>
     <td><pre>foo
 &lt;% (when-not (seq names) identity "No names!") %&gt;
+bar</pre></td>
+    <td>{:names ["Lucy" "Brian"]}</td>
+    <td>foo<br/>
+bar</td>
+  </tr>
+  <tr>
+    <td><pre>foo
 &lt;% (when (seq names) str-br names) %&gt;
 bar</pre></td>
     <td>{:names ["Lucy" "Brian"]}</td>
-    <td>foo
+    <td>foo<br/>
 Lucy&lt;br/&gt;<br/>
 Brian&lt;br/&gt;<br/>
 bar</td>
   </tr>
+  <tr>
+    <td><pre>foo
+&lt;% (for-each [:b names] str "name=" :b) %&gt;
+bar</pre></td>
+    <td>{:names ["Tom" "Jane" "Larry"]}</td>
+    <td>foo<br/>
+name=Tom<br/>
+name=Jane<br/>
+name=Larry<br/>
+bar</td>
+  <tr/>
   <tr>
     <td><pre>foo
 &lt;% (for-each [:a [1 2]
