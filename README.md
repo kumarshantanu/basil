@@ -22,11 +22,21 @@ _slots_ contain limited Clojure forms to express the _filter-functions_ and
 _dynamic data_. Few examples:
 
 ```
-   Template               | Clojure data       | Result
---------------------------|--------------------|-----------
-"foo bar"                 | {}                 | "foo bar"
-"foo <% num %> bar"       | {:num 45}          | "foo 45 bar"
-"foo <% (inc num) %> bar" | {:inc inc :num 45} | "foo 46 bar"
+   Template                  | Clojure data       | Result
+-----------------------------|--------------------|-----------
+"foo bar"                    | {}                 | "foo bar"
+                             |                    |
+"foo <% num %> bar"          | {:num 45}          | "foo 45 bar"
+                             |                    |
+"foo <% (inc num) %> bar"    | {:inc inc :num 45} | "foo 46 bar"
+                             |                    |
+"foo                         | {:names ["Tom"     | "foo
+ <% (str-join "\n"           |          "Jane"    | :a=1, name=Tom
+      (for-each [:a [1 2]    |          "Larry"]} | :a=1, name=Jane
+                 :b names]   |                    | :a=1, name=Larry
+        str ":a=" :a         |                    | :a=2, name=Tom
+            ", name=" :b) %> |                    | :a=2, name=Jane
+ bar"                        |                    | :a=2, name=Larry"
 ```
 
 Use `basil.core/parse-compile` to parse and compile a template and use

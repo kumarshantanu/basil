@@ -92,6 +92,16 @@
 
 
 (defn for-each
+  "Given a map `locals`, a binding vector (keyword to sequable) `k-bindings`,
+  function `f` and a collection of arguments `args`,
+  * iterate through the sequable elements, re/binding corresponding keyword to
+    the element in each pass
+  * substitute in `args` the keywords bound in `k-bindings`
+  * apply function `f` to modified `args`
+  Example:
+  (for-each [:a [1 2]
+             :b [10 20]]
+    str \":a = \" :a \", :b = \" :b)"
   ([locals k-bindings f args]
     {:pre [(map? locals)
            (coll? k-bindings)
