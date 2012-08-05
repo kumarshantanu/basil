@@ -53,6 +53,7 @@ _dynamic data_. Few examples:
 bar</pre></td>
     <td>{:names ["Lucy" "Brian"]}</td>
     <td>foo<br/>
+No names!<br/>
 bar</td>
   </tr>
   <tr>
