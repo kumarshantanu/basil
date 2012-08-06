@@ -123,12 +123,13 @@
 
 
 (defn format-rows
-  "Given a collection of `rows` (each row will be turned into a string) and
+  "Given a collection `rows` (each row will be turned into a string) and
   pairs of alternating head/tail tokens (repeated to match the `rows` count),
   concatenate `rows` each prefixed with head and suffixed with tail."
-  [rows decors] {:pre [(coll? decors)
-                       (not (empty? decors))
+  [rows decors] {:pre [(or (seq? decors)
+                           (coll? decors))
                        (or (nil? rows)
+                           (seq? rows)
                            (coll? rows))]}
   (reduce str (map (fn [[head tail] text]
                      (format "%s%s%s" head text tail))
@@ -136,44 +137,53 @@
                    rows)))
 
 
-(defn serial-rows
-  [rows serial decors-format] {:pre [(coll? decors-format)
-                                        (not (empty? decors-format))]}
-  (format-rows rows
-               (map (fn [n [head-format tail-format]]
-                      [(format head-format n) (format tail-format n)])
-                    serial (partition 2 (flatten (repeat decors-format))))))
+(defn serial-decors
+  "Given a collection of series data (eg. a range of numbers) and
+  pairs of alternating head/tail 'format' tokens (repeated to `serial` count),
+  return `decors` (see `format-rows` function) by applying `(format fmt each)`
+  where `fmt` is either `head` or `tail` (from `decors-format`) and `each` is
+  the element from `serial` during iteration.
+  Example:
+  (format-rows rows (serial-decors (iterate inc 1) [\"id=%d\" \"\n\"]))"
+  [serial decors-format] {:pre [(or (seq? serial)
+                                    (coll? serial))
+                                (seq serial)
+                                (or (coll? decors-format)
+                                    (seq? decors-format))
+                                (seq decors-format)]}
+  (map (fn [n [head-format tail-format]]
+         [(format head-format n) (format tail-format n)])
+       serial (partition 2 (flatten (repeat decors-format)))))
 
 
 (def ^{:doc "Default filter functions"}
   default-handlers
   {;; generic string conversion
-   :auto-str    auto-str
-   :default     auto-str
-   :identity    identity
-   :partial     partial
-   :seq         seq
-   :str         str
-   :str-join    str/join
-   :str-br      (partial str/join "<br/>\n")
-   :str-newline (partial str/join "\n")
+   :auto-str      auto-str
+   :default       auto-str
+   :identity      identity
+   :partial       partial
+   :seq           seq
+   :str           str
+   :str-join      str/join
+   :str-br        (partial str/join "<br/>\n")
+   :str-newline   (partial str/join "\n")
    ;; conditionals
-   :when        (fn [test f & more] (when     test (apply f more)))
-   :when-not    (fn [test f & more] (when-not test (apply f more)))
-   :for-each    (fn [k-bindings f & more] (for-each k-bindings f more))
+   :when          (fn [test f & more] (when     test (apply f more)))
+   :when-not      (fn [test f & more] (when-not test (apply f more)))
+   :for-each      (fn [k-bindings f & more] (for-each k-bindings f more))
    ;; formatting
-   :format-rows (fn [rows decor & more]
+   :format-rows   (fn [rows decor & more]
                   (format-rows rows (into [decor] more)))
-   :serial-rows (fn [rows serial decor-format & more]
-                  (serial-rows rows serial
-                               (into [decor-format] more)))
-   :html-tr     (fn [rows] (format-rows rows "<tr>" "</tr>\n"))
-   :html-li     (fn [rows] (format-rows rows "<li>" "</li>\n"))
+   :serial-decors (fn [serial decor-format & more]
+                    (serial-decors serial (into [decor-format] more)))
+   :html-tr       (fn [rows] (format-rows rows "<tr>" "</tr>\n"))
+   :html-li       (fn [rows] (format-rows rows "<li>" "</li>\n"))
    ;; HTML-escaping
-   :html-safe   html-safe
-   :html-nbsp   html-nbsp
+   :html-safe     html-safe
+   :html-nbsp     html-nbsp
    ;; including other templates
-   :include     group/render-by-name*})
+   :include       group/render-by-name*})
 
 
 (def ^{:doc "Default model"}
