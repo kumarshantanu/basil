@@ -14,6 +14,10 @@ _This library is not on Clojars yet._
 Leiningen dependency: `[basil "0.1.0-SNAPSHOT"]`
 
 
+This page has only elementary documentation.
+[Intro page](https://github.com/kumarshantanu/basil/blob/master/doc/intro.md)
+has more details.
+
 ### Basic Templates
 
 A Basil template can be parsed from a plain string. Every Basil template is
