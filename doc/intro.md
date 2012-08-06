@@ -144,7 +144,7 @@ Shadowing them with your own version is not recommended.
 |Function | Arguments | Description |
 |---------|-----------|-------------|
 |html-safe| x         | Encode as HTML-safe string |
-|html-nbsp| x         | Encode as HTML-safe string converting space to `&nbsp;` |
+|html-nbsp| x         | Encode as HTML-safe string, also convert space to `&nbsp;` |
 
 
 **Including other templates**
@@ -156,11 +156,96 @@ Shadowing them with your own version is not recommended.
 
 ## Phases of a template
 
+So, what are the stages a templates goes through? What really happens when a
+template is compiled? The sub-sections below briefly describe the inner working
+of Basil.
+
 ### Parse & compile
+
+When we say a template is compiled, it is actually parsed, then compiled.
+
+During parsing the template string is tokenized, partitioned into static and
+slot segments and stored as a sequence of tagged text. If there is a parsing
+error, the process stops and the error is returned.
+
+Once a template is parsed correctly, it is compiled by converting every text
+in the sequence into an appropriate function that when executed with _context_,
+would return string representation of that segment. A compiled template is thus
+in object form that is usually stored in memory.
+
 ### Rendering
+
+Rendering a template requires it to be compiled earlier. You must pass _context_
+data to render a template. The _context_ is a collection of maps wherein the
+'_slot_ symbols' are looked up during rendering a template. The symbols are
+searched recursively in the Clojure S-expression and replaced by corresponding
+values found in the _context_ data at once. There is no delayed evaluation and
+no lexical scope when rendering a template _slot_.
+
+Each segment (static or _slot_) in a compiled template is rendered independently
+and concatenated into a single string in the end.
 
 ## Template groups
 
+In many cases, you may need to work on a group of templates to serve a use-case.
+For example, when using templates on the server side to render web pages you may
+setup common templates for certain fragments of web pages, and a number of more
+templates for every page. In such a scenario, you almost certainly need template
+groups.
+
+Basil supports creating template groups from a number of sources. At its core,
+a template group is a protocol that anybody can use to implement own variety of
+template groups.
+
 ### From a map
+
+Creating a template group from a map is easy:
+
+```clojure
+(def g (basil.core/compile-template-group
+         basil.jvm/slot-compiler
+         {:tpl-1 "Hello, <% name %>!"
+          :tpl-2 (slurp "tpl/activity.basil")
+          :tpl-3 "<% (include :tpl-1) %>\n Welcome."}))
+```
+
+Note that you need a JVM-based '_slot_ compiler'. Rendering a group is easy:
+
+```clojure
+(basil.core/render-by-name g :tpl-1 [{:name "Morris"}])
+=> "Hello, Morris!"
+(basil.core/render-by-name g :tpl-3 [{:name "Morris"}])
+=> "Hello, Morris!
+Welcome."
+```
+
 ### From directory (on the JVM)
+
+Creating a template group from a directory is easier:
+
+```clojure
+(def g (basil.jvm/make-group-from-directory :prefix "templates/"))
+```
+
+The `:prefix` argument is optional and used to qualify the template filenames
+with correct path. Another optional argument is `:cache-millis` with a default
+value of 0 (no caching).
+
+Rendering a template from a group is same for all kinds of template groups. See
+the previous section _From a map_.
+
 ### From classpath (on the JVM)
+
+Creating a template group from the classpath is just as easy as creating a group
+from a directory. In most cases you would probably want to create a group from
+classpath:
+
+```clojure
+(def g (basil.jvm/make-group-from-classpath :prefix "templates/"))
+```
+
+Make sure the directory 'templates' is in classpath (under 'src' or 'resources'
+directory) of your Leiningen project.
+
+Rendering a template from a group is same for all kinds of template groups. See
+the previous section _From a map_.
