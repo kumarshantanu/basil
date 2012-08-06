@@ -3,8 +3,9 @@ Changes and TODO
 
 ## 2012-????-?? / 0.2.0
 
-* [TODO] Reverse HTML entities
 * [TODO] ClojureScript support
+* [TODO] Auto-select/let-user-override default rendering for speed
+* [TODO] Filter for reversing HTML entities
 
 
 ## 2012-August-?? / 0.1.0
