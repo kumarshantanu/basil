@@ -138,7 +138,7 @@ Shadowing them with your own version is not recommended.
 |html-tr      | rows                  | Same as `(format-rows rows ["<tr>" "</tr>\n"])` |
 |html-li      | rows                  | Same as `(format-rows rows ["<li>" "</li>\n"])` |
 |html-option  | rows                  | Same as `(format-rows rows ["<option>" "</option>"])` |
-|html-option-v| vals rows             | Same as `(format-rows rows (serial-decors ["<option value='%s'>" "</option>"]))` |
+|html-option-v| vals rows             | Same as `(format-rows rows (serial-decors vals ["<option value='%s'>" "</option>"]))` |
 
 
 **HTML-escaping**
