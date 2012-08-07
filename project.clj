@@ -25,7 +25,7 @@
             "dev" ["with-profile" "1.4,dev"]
             "aux" ["with-profile" "1.4,dev,aux"]}
   :warn-on-reflection true
-  :plugins [[lein-cljsbuild "0.2.4"]]
+  :plugins [[lein-cljsbuild "0.2.5"]]
   ;; Enable the lein hooks for: clean, compile, test, and jar.
   :hooks [leiningen.cljsbuild]
   :cljsbuild {:crossovers [basil.core   basil.error  basil.group
