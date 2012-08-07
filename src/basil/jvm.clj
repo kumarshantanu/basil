@@ -18,7 +18,7 @@
 (defn err-handler
   "Error handler for the JVM that throws exception instead of error messages."
   [text] {:pre [(types/error-text? text)]}
-  (throw (IllegalStateException. (:text text))))
+  (throw (IllegalStateException. ^String (str (:text text)))))
 
 
 (defn parse-compile-resource
