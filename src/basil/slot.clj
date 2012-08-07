@@ -13,6 +13,8 @@
        (every? map? x)))
 
 (defn local-val
+  "Given collection of locals `locals-coll` and key `k`, retrieve the value of
+  `k`. Return error if `k` not found."
   [k slot-text locals-coll] {:pre [(symbol? k)
                                    (types/slot-text? slot-text)
                                    (locals-coll? locals-coll)]}
@@ -34,7 +36,8 @@
 
 
 (defn local-val-coll
-  "Given an S-expression that is a collection, and a collection of locals"
+  "Given an S-expression `sexp` that is a collection, and a collection of locals
+  `locals-coll`"
   [sexp slot-text locals-coll] {:pre [(coll? sexp)
                                       (types/slot-text? slot-text)
                                       (locals-coll? locals-coll)]}
@@ -62,6 +65,13 @@
       :otherwise        sexp)))
 
 
+(defn eval-entire-slot
+  "Evaluate entire slot and return the value (string)."
+  [sexp slot-text locals-coll]
+  (let [to-str (local-val (symbol 'default) slot-text locals-coll)]
+    (to-str (eval-slot sexp slot-text locals-coll))))
+
+
 (defn make-slot-compiler*
   "Given an S-Expression reader, return a slot compiler that can parse/compile
   a slot-text into a function that renders it. You may not have to call this
@@ -69,7 +79,7 @@
   [reader]
   (fn [slot-text] {:pre [(types/slot-text? slot-text)]}
     (let [sexp (reader (:text slot-text))]
-      (partial eval-slot sexp slot-text))))
+      (partial eval-entire-slot sexp slot-text))))
 
 
 (def make-slot-compiler (memoize make-slot-compiler*))

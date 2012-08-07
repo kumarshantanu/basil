@@ -195,6 +195,22 @@
     (is (types/compiled-template? c))))
 
 
+(deftest test-missing-locals
+  (testing
+    "missing locals"
+    (run-testcases
+      {:name "missing lone symbol"
+       :templt "<% foo %>"
+       :model {}
+       :handlers {}
+       :render "ERROR: [Render] No such local-key 'foo' in 'missing lone symbol' at row 1, col 3 (pos 3)"}
+      {:name "missing fn symbol"
+       :templt "<% (foo) %>"
+       :model {}
+       :handlers {}
+       :render "ERROR: [Render] No such local-key 'foo' in 'missing lone symbol' at row 1, col 3 (pos 3)"})))
+
+
 (defn run-groupcases
   [& cases]
   (doseq [{:keys [name model handlers render group]} cases]
@@ -247,4 +263,5 @@
   (test-slot-with-attributes)
   (test-slot-with-handler-calls)
   (test-parse-compile)
+  (test-missing-locals)
   (test-template-group))

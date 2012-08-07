@@ -131,12 +131,14 @@ Shadowing them with your own version is not recommended.
 
 **Formatting**
 
-|Function     | Arguments                |Description|
-|-------------|--------------------------|-----------|
-|format-rows  | rows decor & more        | Prefix/suffix every element in `rows` using `decor & more` |
-|serial-decors| serial decor-fmt & more  | Create `decor(ation)` for `format-rows` using `serial` |
-|html-tr      | rows                     | Same as `(format-rows rows "<tr>" "</tr>\n")` |
-|html-li      | rows                     | Same as `(format-rows rows "<li>" "</li>\n")` |
+|Function     | Arguments             |Description|
+|-------------|-----------------------|-----------|
+|format-rows  | rows decors           | Prefix/suffix every element in `rows` using `decors` |
+|serial-decors| serial decor-fmt-coll | Create decoration for `format-rows` using `serial` |
+|html-tr      | rows                  | Same as `(format-rows rows ["<tr>" "</tr>\n"])` |
+|html-li      | rows                  | Same as `(format-rows rows ["<li>" "</li>\n"])` |
+|html-option  | rows                  | Same as `(format-rows rows ["<option>" "</option>"])` |
+|html-option-v| vals rows             | Same as `(format-rows rows (serial-decors ["<option value='%s'>" "</option>"]))` |
 
 
 **HTML-escaping**

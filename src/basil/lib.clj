@@ -173,12 +173,14 @@
    :when-not      (fn [test f & more] (when-not test (apply f more)))
    :for-each      (fn [k-bindings f & more] (for-each k-bindings f more))
    ;; formatting
-   :format-rows   (fn [rows decor & more]
-                  (format-rows rows (into [decor] more)))
-   :serial-decors (fn [serial decor-format & more]
-                    (serial-decors serial (into [decor-format] more)))
-   :html-tr       (fn [rows] (format-rows rows "<tr>" "</tr>\n"))
-   :html-li       (fn [rows] (format-rows rows "<li>" "</li>\n"))
+   :format-rows    format-rows   ;; args -- rows decors
+   :serial-decors  serial-decors ;; args -- serial decor-format-coll
+   :html-tr       (fn [rows] (format-rows rows ["<tr>" "</tr>\n"]))
+   :html-li       (fn [rows] (format-rows rows ["<li>" "</li>\n"]))
+   :html-option   (fn [rows] (format-rows rows ["<option>" "</option>"]))
+   :html-option-v (fn [vals rows] (->> ["<option value='%s'>" "</option>"]
+                                       (serial-decors vals)
+                                       (format-rows rows)))
    ;; HTML-escaping
    :html-safe     html-safe
    :html-nbsp     html-nbsp
