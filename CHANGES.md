@@ -21,7 +21,7 @@ Changes and TODO
   * Force user to implicitly use JVM/CLJS specific error-handler
 
 
-## 2012-August-?? / 0.1.0
+## 2012-August-08 / 0.1.0
 
 * Template with slots
 * Parse/compile and Render are separate
@@ -37,5 +37,3 @@ Changes and TODO
 * Collection literals - vectors, sets, maps
 * Cache compiled templates (re-load only if modified)
 * HTML entities (escaping HTML to avoid XSS)
-* [TODO] Tests for JVM, HTML-entities and filter functions
-* [TODO] Documentation

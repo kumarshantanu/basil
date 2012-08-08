@@ -3,15 +3,15 @@
 Basil is a flavored templating library for Clojure, inspired by a number of
 templating systems such as Enlive, JSTL and Jinja2.
 
-**Important:** Consider this library in _alpha_ until this notice is removed.
+**Important:** Consider this library in _ALPHA_ until this notice is removed.
 API and implementation will change in incompatible ways. You have been warned.
 
 
 ## Usage
 
-_This library is not on Clojars yet._
+On Clojars: https://clojars.org/basil
 
-Leiningen dependency: `[basil "0.1.0-SNAPSHOT"]`
+Leiningen dependency: `[basil "0.1.0"]`
 
 
 This page has only elementary documentation.
