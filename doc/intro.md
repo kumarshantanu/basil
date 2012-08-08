@@ -196,7 +196,7 @@ templates for every page. In such a scenario, you almost certainly need template
 groups.
 
 Basil supports creating template groups from a number of sources. At its core,
-a template group is a protocol that anybody can use to implement thier own variety of
+a template group is a protocol that anybody can use to implement their own variety of
 template groups.
 
 ### From a map
