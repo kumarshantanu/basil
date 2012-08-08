@@ -109,6 +109,7 @@ Shadowing them with your own version is not recommended.
 
 |Function   | Arguments | Description |
 |-----------|-----------|-------------|
+|apply      | f & args  | Same as Apply clojure.core/apply |
 |auto-str   | x         | Converts `x` (if collection, interposing with newline) to string. |
 |default    | x         | Applied when a _slot_ has only data, e.g. <% foo %> |
 |identity   | x         | Same as clojure.core/identity |
@@ -116,8 +117,8 @@ Shadowing them with your own version is not recommended.
 |seq        | x         | Same as clojure.core/seq      |
 |str        | x & args  | Same as clojure.core/str      |
 |str-join   | j coll    | Same as clojure.string/join   |
-|str-br     | coll      | Same as `(partial str/join "<br/>\n")` |
-|str-newline| coll      | Same as `(partial str/join "\n")`      |
+|str-br     | coll      | Same as `(partial clojure.string/join "<br/>\n")` |
+|str-newline| coll      | Same as `(partial clojure.string/join "\n")`      |
 
 
 **Conditionals**
