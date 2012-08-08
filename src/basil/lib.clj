@@ -159,6 +159,7 @@
 (def ^{:doc "Default filter functions"}
   default-handlers
   {;; generic string conversion
+   :apply         apply
    :auto-str      auto-str
    :default       auto-str
    :identity      identity
