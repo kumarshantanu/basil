@@ -116,8 +116,8 @@ Shadowing them with your own version is not recommended.
 |seq        | x         | Same as clojure.core/seq      |
 |str        | x & args  | Same as clojure.core/str      |
 |str-join   | j coll    | Same as clojure.string/join   |
-|str-br     | coll      | Same as `(partial str/join "<br/>\n")` |
-|str-newline| coll      | Same as `(partial str/join "\n")`      |
+|str-br     | coll      | Same as `(partial clojure.string/join "<br/>\n")` |
+|str-newline| coll      | Same as `(partial clojure.string/join "\n")`      |
 
 
 **Conditionals**
@@ -158,7 +158,7 @@ Shadowing them with your own version is not recommended.
 
 ## Phases of a template
 
-So, what are the stages a templates goes through? What really happens when a
+So, what are the stages a template goes through? What really happens when a
 template is compiled? The sub-sections below briefly describe the inner working
 of Basil.
 
@@ -191,12 +191,12 @@ and concatenated into a single string in the end.
 
 In many cases, you may need to work on a group of templates to serve a use-case.
 For example, when using templates on the server side to render web pages you may
-setup common templates for certain fragments of web pages, and a number of more
+setup common templates for certain fragments of web pages, and a number of other
 templates for every page. In such a scenario, you almost certainly need template
 groups.
 
 Basil supports creating template groups from a number of sources. At its core,
-a template group is a protocol that anybody can use to implement own variety of
+a template group is a protocol that anybody can use to implement thier own variety of
 template groups.
 
 ### From a map
