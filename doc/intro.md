@@ -21,8 +21,8 @@ between two methods of using templates:
 Every Basil template
 
 * may be composed of _static text_ and optionally, _slots_.
-* invariability begins with _static text_.
-* has _static text_ and _slots_ which are always distinct and never nested.
+* invariably begins with _static text_.
+* has _static text_ and _slots_, which are always distinct and never nested.
 
 _Static text_ is literally just arbitrary static text and is rendered as it is
 in a context-free manner. A _slot_ is a snippet of text contained within the
