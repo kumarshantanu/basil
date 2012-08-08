@@ -4,8 +4,21 @@ Changes and TODO
 ## 2012-????-?? / 0.2.0
 
 * [TODO] ClojureScript support
-* [TODO] Auto-select/let-user-override default rendering for speed
-* [TODO] Filter for reversing HTML entities
+* [TODO] Abstract out string concatenation
+  * Auto-select efficient JVM/CLJS specific concatenation
+  * Use java.lang.StringBuilder on the JVM
+  * See https://github.com/clojure/clojurescript/wiki/Differences-from-Clojure
+  * Use something like this for CLJS (see 'Host Interop' section at above URL)
+
+```clojure
+  (let [sb (goog.string.StringBuffer. "hello, ")]
+    (.append sb "world")
+    (.toString sb))
+```
+
+* [TODO] Filter fns for reversing HTML entities
+* [TODO] Error reporting must throw exception by default
+  * Force user to implicitly use JVM/CLJS specific error-handler
 
 
 ## 2012-August-?? / 0.1.0
