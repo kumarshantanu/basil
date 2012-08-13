@@ -152,21 +152,16 @@
 (defn parse-template
   "Parse template and return a sequence of (alternating static and slot/error)
   Text instances.
-  Optional arguments:
-    escape-char (Character) escape character for parsing the template 
-    err-handler (function)  accepts an error string and returns a suitable
-                            message, or throws platform-specific exception"
+  Note: basil.error/*error* must be already rebound before this call."
   ([template-string]
     (parse-template template-string (str (gensym))))
-  ([^String template-string template-name
-    & {:keys [escape-char err-handler]
-       :or {escape-char default-escape-char
-            err-handler error/*error*}}]
+  ([template-string template-name]
+    (parse-template template-string template-name default-escape-char))
+  ([template-string template-name escape-char]
     {:post [(types/parsed-template? %)]
      :pre  [(string? template-string)
             (not (nil? template-name))]}
-    (binding [vars/*template-name* (or template-name vars/*template-name*)
-              error/*error*        (or err-handler error/*error*)]
+    (binding [vars/*template-name* (or template-name vars/*template-name*)]
       (parse-static (types/make-raw-template template-string template-name)
                     escape-char))))
 
@@ -188,50 +183,48 @@
 
 
 (defn compile-template
-  "Compile a parsed template into a ready-to-render format"
-  [slot-reader parsed-template
-   & {:keys [err-handler template-name]
-      :or {err-handler   error/*error*
-           template-name (or (:name parsed-template) vars/*template-name*)}
-      :as opt}]
-  {:post [(types/compiled-template? %)
-          (= (:name parsed-template) (:name %))]
-   :pre  [(types/parsed-template? parsed-template)
-          (fn? slot-reader)]}
-  (binding [vars/*template-name* template-name
-            error/*error*        err-handler]
-    (types/make-compiled-template
-      (doall (map (partial compile-text slot-reader)
-                  (:content parsed-template)))
-      (:name parsed-template))))
+  "Compile a parsed template into a ready-to-render format.
+  Note: basil.error/*error* must be already rebound before this call."
+  ([slot-reader parsed-template]
+    (compile-template slot-reader parsed-template
+                      (or (:name parsed-template) vars/*template-name*)))
+  ([slot-reader parsed-template template-name]
+    {:post [(types/compiled-template? %)
+            (= (:name parsed-template) (:name %))]
+     :pre  [(types/parsed-template? parsed-template)
+            (fn? slot-reader)]}
+    (binding [vars/*template-name* template-name]
+      (types/make-compiled-template
+        (doall (map (partial compile-text slot-reader)
+                    (:content parsed-template)))
+        (:name parsed-template)))))
 
 
 (defn parse-compile
-  "Convenience function to parse and compile a template in one step"
-  [slot-reader ^String template ^String template-name & {:keys [] :as opt}]
-  (let [args (flatten (seq opt))]
-    (apply compile-template
-           slot-reader (apply parse-template template template-name args)
-           args)))
+  "Convenience function to parse and compile a template in one step.
+  Note: basil.error/*error* must be already rebound before this call."
+  [slot-reader ^String template ^String template-name]
+  (->> (parse-template template template-name)
+       (compile-template slot-reader)))
 
 
 (defn compile-template-group
   "Given a map of template-name to template-body, convert into a template-group
   and return the same. You can pass the same optional args that you pass when
-  parsing and compiling templates."
-  [slot-reader group & args] {:post [(group/template-group? %)]
-                              :pre  [(map? group)]}
+  parsing and compiling templates.
+  Note: basil.error/*error* must be already rebound before this call."
+  [slot-reader group] {:post [(group/template-group? %)]
+                       :pre  [(map? group)]}
   (let [cgp (reduce
               (fn [m n]
                 (assoc m n
                        (let [b (get group n)]
                          (cond
                            (types/compiled-template? b) b
-                           (types/parsed-template? b) (apply compile-template
-                                                             slot-reader b args)
-                           :otherwise                 (apply parse-compile
-                                                             slot-reader b n
-                                                             args)))))
+                           (types/parsed-template? b) (compile-template
+                                                        slot-reader b)
+                           :otherwise                 (parse-compile
+                                                        slot-reader b n)))))
               {} (keys group))]
     (group/make-group-from-map cgp)))
 
@@ -246,48 +239,33 @@
 
 
 (defn ^String render-template
-  "Render given `compiled-template` where slots can be specified as
-  \"<% tokens-here %>\" and the character sequences <% and %> can be escaped
-  from being parsed as a slot-marker by prefixing it with a backslash (\\).
-  Optional arguments:
-    model       (map) Data model to override *model*
-    handlers    (map) Handler-functions to override *handlers*
-    err-handler (function) Accepts an error string and returns a suitable
-                           message, or throws platform-specific exception"
-  [compiled-template locals-coll
-   & {:keys [err-handler]
-      :or {err-handler error/*error*}
-      :as opt}]
+  "Render given `compiled-template` using `locals-coll`.
+  Note: basil.error/*error* must be already rebound before this call."
+  [compiled-template locals-coll]
   {:post [(string? %)]
    :pre  [(types/compiled-template? compiled-template)
           (slot/locals-coll? locals-coll)]}
   (binding [vars/*template-name* (:name compiled-template)
-            vars/*locals-coll*   (add-default-locals locals-coll)
-            error/*error*        (or err-handler error/*error*)]
+            vars/*locals-coll*   (add-default-locals locals-coll)]
     (render/render-template* compiled-template)))
 
 
 (defn render-by-name
-  "Given a template group, find the compiled template by name and render it."
-  [template-group template-name locals-coll
-   & {:keys [err-handler]
-      :or {err-handler error/*error*}
-      :as opt}]
+  "Given a template group, find the compiled template by name and render it.
+  Note: basil.error/*error* must be already rebound before this call."
+  [template-group template-name locals-coll]
   {:post [(string? %)]
    :pre  [(group/template-group? template-group)
           (slot/locals-coll? locals-coll)]}
   (binding [vars/*template-name*   template-name
             vars/*locals-coll*     (add-default-locals locals-coll)
-            error/*error*          (or err-handler error/*error*)
             group/*template-group* template-group]
     (group/render-by-name* template-name)))
 
 
 (defn parse-compile-render
-  "Convenience function to parse, compile and render a template in one step"
-  [slot-reader ^String template ^String template-name locals-coll
-   & {:keys [] :as opt}]
-  (let [args (flatten (seq opt))]
-    (apply render-template
-           (apply parse-compile slot-reader template template-name args)
-           locals-coll args)))
+  "Convenience function to parse, compile and render a template in one step.
+  Note: basil.error/*error* must be already rebound before this call."
+  [slot-reader ^String template ^String template-name locals-coll]
+  (-> (parse-compile slot-reader template template-name)
+      (render-template locals-coll)))

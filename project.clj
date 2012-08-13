@@ -1,4 +1,4 @@
-(defproject basil "0.1.0"
+(defproject basil "0.2.0-SNAPSHOT"
   :description "Basil, a template library for Clojure"
   :url "https://github.com/kumarshantanu/basil"
   :license {:name "Eclipse Public License"

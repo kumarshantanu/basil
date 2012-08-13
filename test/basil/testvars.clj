@@ -1,5 +1,6 @@
 (ns basil.testvars
-  (:require [basil.jvm :as jvm]))
+  (:require [basil.public;*CLJSBUILD-REMOVE*;-cljs
+                          :as public]))
 
 
-(def slot-compiler jvm/slot-compiler)
+(def slot-compiler public/slot-compiler)

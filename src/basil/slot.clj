@@ -5,8 +5,6 @@
             [basil.vars  :as vars]))
 
 
-;; slot-compiler -- parses/compiles a slot-text into a function that renders it
-
 (defn locals-coll?
   [x]
   (and (some #(% x) [list? vector? set? seq? nil?])
@@ -37,7 +35,7 @@
 
 (defn local-val-coll
   "Given an S-expression `sexp` that is a collection, and a collection of locals
-  `locals-coll`"
+  `locals-coll`, return the `sexp` collection with reified values."
   [sexp slot-text locals-coll] {:pre [(coll? sexp)
                                       (types/slot-text? slot-text)
                                       (locals-coll? locals-coll)]}
@@ -85,13 +83,7 @@
 (def make-slot-compiler (memoize make-slot-compiler*))
 
 
-;(defn read-template
-;  "
-;  See: https://github.com/brentonashworth/one/blob/master/src/lib/clj/one/test.clj"
-;  [template-body template-name slot-reader
-;   & {:keys [err-handler escape-char]
-;      :or {err-handler error/*error*
-;           escape-char default-escape-char}}])
-;
-;(defn eval-template
-;  [template & locals])
+;; slot-compiler -- parses/compiles a slot-text into a function that renders it
+
+
+;See: https://github.com/brentonashworth/one/blob/master/src/lib/clj/one/test.clj

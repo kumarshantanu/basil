@@ -17,8 +17,9 @@ Changes and TODO
 ```
 
 * [TODO] Filter fns for reversing HTML entities
-* [TODO] Error reporting must throw exception by default
-  * Force user to implicitly use JVM/CLJS specific error-handler
+* [TODO] Streamlined filter-fns for HTML generation, esp collections
+* Error reporting must throw exception by default
+  * New API basil.public[-cljs] to implicitly use JVM/CLJS error-handler
 
 
 ## 2012-August-08 / 0.1.0

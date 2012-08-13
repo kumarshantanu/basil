@@ -1,5 +1,6 @@
 (ns basil.core-test
-  (:require [basil.core  :as core]
+  (:require [basil.public;*CLJSBUILD-REMOVE*;-cljs
+                         :as public]
             [basil.types :as types]
             [basil.util  :as util])
   (:use [basil.testvars;*CLJSBUILD-REMOVE*;-cljs
@@ -13,19 +14,27 @@
 (defn run-testcases
   [& cases]
   (doseq [{:keys [name templt model handlers render]} cases]
-    (is (= render (core/parse-compile-render
+    (is (= render (public/parse-compile-render
                     slot-compiler templt name (filter identity
                                                       [model handlers])))
         name)))
 
 
-(deftest test-static-templates
+(defn run-testcases-thrown
+  [& cases]
+  (doseq [{:keys [name templt model handlers render]} cases]
+    (is (thrown? RuntimeException (re-pattern render)
+                 (public/parse-compile-render
+                   slot-compiler templt name (filter identity
+                                                     [model handlers])))
+        name)))
+
+
+(deftest test-static-templates-happy
   (run-testcases
    ;; no escapes
    {:name   "Empty"
     :templt ""                 :render ""}
-   {:name   "Incomplete slot"
-    :templt "Hello <% "        :render "Hello ERROR: [Parse] Invalid/incomplete slot ' ' in 'Incomplete slot' at row 1, col 9 (pos 9)"}
    {:name   "No slots"
     :templt "Hello World"      :render "Hello World"}
    ;; escapes
@@ -60,17 +69,25 @@
     :templt "Hello <World\\>"  :render "Hello <World\\>"}))
 
 
+(deftest test-static-templates-error
+  (run-testcases-thrown
+   ;; no escapes
+   {:name   "Incomplete slot"
+    :templt "Hello <% "        :render "Hello ERROR: [Parse] Invalid/incomplete slot ' ' in 'Incomplete slot' at row 1, col 9 (pos 9)"}
+   ;; escapes
+   ;; non-escapes
+   ;; Trailing escapes
+   ;; Trailing non-escapes
+   ))
+
+
 (deftest test-template-empty-slot
   (testing
     "Empty slot"
-    (is (thrown? RuntimeException ;#"EOF while reading"
-                 ;(run-testcases
-                 ;  ;; empty slot
-                 ;  {:name   "Empty slot"
-                 ;   :templt "<%%>" :render ""})
-                 (let [name   "Empty slot"
-                       templt "<%%>"]
-                   (core/parse-compile-render slot-compiler templt name))))))
+    (run-testcases-thrown
+      ;; empty slot
+      {:name   "Empty slot"
+       :templt "<%%>" :render "EOF while reading"})))
 
 
 (deftest test-slot-with-literals
@@ -189,8 +206,8 @@
 
 (deftest test-parse-compile
   (let [t "Hello <% beautiful %> World"
-        p (core/parse-template t)
-        c (core/compile-template slot-compiler p)]
+        p (public/parse-template t)
+        c (public/compile-template slot-compiler p)]
     (is (types/parsed-template? p))
     (is (types/compiled-template? c))))
 
@@ -198,7 +215,7 @@
 (deftest test-missing-locals
   (testing
     "missing locals"
-    (run-testcases
+    (run-testcases-thrown
       {:name "missing lone symbol"
        :templt "<% foo %>"
        :model {}
@@ -214,9 +231,19 @@
 (defn run-groupcases
   [& cases]
   (doseq [{:keys [name model handlers render group]} cases]
-    (let [tgp (core/compile-template-group slot-compiler group)]
-      (is (= render (core/render-by-name tgp name (filter identity
-                                                          [model handlers])))
+    (let [tgp (public/compile-template-group slot-compiler group)]
+      (is (= render (public/render-by-name tgp name (filter identity
+                                                            [model handlers])))
+          name))))
+
+
+(defn run-groupcases-thrown
+  [& cases]
+  (doseq [{:keys [name model handlers render group]} cases]
+    (let [tgp (public/compile-template-group slot-compiler group)]
+      (is (thrown? RuntimeException (re-pattern render)
+                   (public/render-by-name tgp name (filter identity
+                                                           [model handlers])))
           name))))
 
 
@@ -246,17 +273,21 @@
          :group  group})))
   (testing
     "Missing templates in groups"
-    (let [tgp (core/compile-template-group slot-compiler {:a "Static"
-                                                          :b "<% (include :c) %>"})]
-      (is (= "ERROR: [Render] No such template name/key: ':c' in ':c' at row 0, col 0 (pos 0)"
-             (core/render-by-name tgp :c [])))
-      (is (= "ERROR: [Render] No such template name/key: ':c' in ':b' at row 1, col 3 (pos 3)"
-             (core/render-by-name tgp :b []))))))
+    (let [group {:a "Static"
+                 :b "<% (include :c) %>"}]
+      (run-groupcases-thrown
+        {:name   :c
+         :render "ERROR: [Render] No such template name/key: ':c' in ':c' at row 0, col 0 (pos 0)"
+         :group  group}
+        {:name   :b
+         :render "ERROR: [Render] No such template name/key: ':c' in ':b' at row 1, col 3 (pos 3)"
+         :group  group}))))
 
 
 (defn ;;^:export
        test-ns-hook []
-  (test-static-templates)
+  (test-static-templates-happy)
+  (test-static-templates-error)
   (test-template-empty-slot)
   (test-slot-with-literals)
   (test-static-with-slot)
@@ -264,4 +295,5 @@
   (test-slot-with-handler-calls)
   (test-parse-compile)
   (test-missing-locals)
-  (test-template-group))
+  (test-template-group)
+  )

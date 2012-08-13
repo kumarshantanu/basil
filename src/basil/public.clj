@@ -1,4 +1,4 @@
-(ns basil.jvm
+(ns basil.public
   (:require [clojure.java.io :as io]
             [clojure.string  :as str]
             [basil.core  :as core]
@@ -8,7 +8,7 @@
             [basil.types :as types]
             [basil.util  :as util]
             [basil.vars  :as vars])
-  (:import (java.io File)
+  (:import (java.io  File)
            (java.net URL)))
 
 
@@ -18,7 +18,35 @@
 (defn err-handler
   "Error handler for the JVM that throws exception instead of error messages."
   [text] {:pre [(types/error-text? text)]}
-  (throw (IllegalStateException. ^String (str (:text text)))))
+  (throw (RuntimeException. ^String (str (:text text)))))
+
+
+(defmacro with-err-handler
+  [& body]
+  `(binding [error/*error* err-handler]
+     ~@body))
+
+
+;; ----- Public functions from basil.core
+
+
+(defmacro defn-with-err-handler
+  [f-name]
+  (let [q-name (symbol (str "core/" (name f-name)))
+        f-doc  (str "See basil.core/" (name f-name))]
+    `(defn ~f-name ~f-doc [& args#] (with-err-handler (apply ~q-name args#)))))
+
+
+(defn-with-err-handler parse-template)
+(defn-with-err-handler compile-template)
+(defn-with-err-handler parse-compile)
+(defn-with-err-handler compile-template-group)
+(defn-with-err-handler render-template)
+(defn-with-err-handler render-by-name)
+(defn-with-err-handler parse-compile-render)
+
+
+;; ----- End of public functions from basil.core
 
 
 (defn parse-compile-resource

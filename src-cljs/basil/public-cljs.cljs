@@ -1,4 +1,4 @@
-(ns basil.cljs
+(ns basil.public-cljs
   (:require [cljs.reader :as reader]
             [basil.slot  :as slot]
             [basil.types :as types]))
