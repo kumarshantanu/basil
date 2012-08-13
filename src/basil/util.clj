@@ -1,38 +1,22 @@
 (ns basil.util
-  (:require [clojure.string :as str]
-            [clojure.pprint :as pp]))
+  (:require [clojure.string :as str])
+  (:use;*CLJSBUILD-REMOVE*;-macros
+    [basil.util-macro :only [verify]]))
 
 
 ;; ===== Diagnostics and debugging =====
 
 
-(defmacro echo
-  "Print x and return it."
-  [msg x]
-  `(let [line# (->> (Throwable.)
-                 (.getStackTrace)
-                 (filter #(.startsWith (.getClassName %) "basil."))
-                 first)]
-     (print (format "\n[ECHO] %s:%d%s "
-                    (.getFileName line#) (.getLineNumber line#) ~msg))
-     (pp/pprint ~x)
-     (flush)
-     ~x))
-
-
-(defmacro verify
-  "Assert that (pred x) returns logical true, then returns x. `pred` may be a
-  fn, or something that can be invoked with one argument."
-  [pred x]
-  `(do
-     (try (assert (~pred ~x))
-       (catch AssertionError e#
-         (throw (AssertionError.
-                  (str (.getMessage e#) " - found (" (type ~x) ")\n"
-                       (with-out-str
-                         (try (pp/pprint ~x)
-                           (catch Exception _# (println ~x)))))))))
-     ~x))
+(defn echo
+  "Print msg, x and return x."
+  ([msg x]
+    (print msg "") (println x)
+    (flush)
+    x)
+  ([x]
+    (println x)
+    (flush)
+    x))
 
 
 ;; ===== Tuple utilities =====

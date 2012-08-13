@@ -286,7 +286,7 @@
          :group  group}))))
 
 
-(defn ;;^:export
+(defn ^:export
        test-ns-hook []
   (test-static-templates-happy)
   (test-static-templates-error)

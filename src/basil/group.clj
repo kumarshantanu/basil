@@ -4,7 +4,9 @@
             [basil.slot   :as slot]
             [basil.types  :as types]
             [basil.util   :as util]
-            [basil.vars   :as vars]))
+            [basil.vars   :as vars])
+  (:use;*CLJSBUILD-REMOVE*;-macros
+    [basil.util-macro :only [verify]]))
 
 
 (defprotocol TemplateGroup
@@ -100,7 +102,7 @@
     {:pre [(template-group? template-group)
            (not (nil? template-name))]}
     (let [[compiled-template error-text] (->> (obtain template-group template-name)
-                                              (util/verify util/pair?))]
+                                              (verify util/pair?))]
       (if error-text
         (:text error-text)
         (render/render-template* compiled-template))))
