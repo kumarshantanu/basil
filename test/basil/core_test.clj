@@ -1,5 +1,6 @@
 (ns basil.core-test
-  (:require [basil.public;*CLJSBUILD-REMOVE*;-cljs
+  (:require [basil.ambiguous :as ambi]
+            [basil.public;*CLJSBUILD-REMOVE*;-cljs
                          :as public]
             [basil.types :as types]
             [basil.util  :as util])
@@ -23,10 +24,10 @@
 (defn run-testcases-thrown
   [& cases]
   (doseq [{:keys [name templt model handlers render]} cases]
-    (is (thrown? RuntimeException (re-pattern render)
-                 (public/parse-compile-render
-                   slot-compiler templt name (filter identity
-                                                     [model handlers])))
+    (is (thrown-with-msg?
+          RuntimeException (ambi/re-quote render)
+          (public/parse-compile-render
+            slot-compiler templt name (filter identity [model handlers])))
         name)))
 
 
@@ -73,7 +74,8 @@
   (run-testcases-thrown
    ;; no escapes
    {:name   "Incomplete slot"
-    :templt "Hello <% "        :render "Hello ERROR: [Parse] Invalid/incomplete slot ' ' in 'Incomplete slot' at row 1, col 9 (pos 9)"}
+    :templt "Hello <% "
+    :render "[Parse] Invalid/incomplete slot ' ' in 'Incomplete slot' at row 1, col 9 (pos 9)"}
    ;; escapes
    ;; non-escapes
    ;; Trailing escapes
@@ -220,12 +222,12 @@
        :templt "<% foo %>"
        :model {}
        :handlers {}
-       :render "ERROR: [Render] No such local-key 'foo' in 'missing lone symbol' at row 1, col 3 (pos 3)"}
+       :render "[Render] No such local-key 'foo' in 'missing lone symbol' at row 1, col 3 (pos 3)"}
       {:name "missing fn symbol"
        :templt "<% (foo) %>"
        :model {}
        :handlers {}
-       :render "ERROR: [Render] No such local-key 'foo' in 'missing lone symbol' at row 1, col 3 (pos 3)"})))
+       :render "[Render] No such local-key 'foo' in 'missing fn symbol' at row 1, col 3 (pos 3)"})))
 
 
 (defn run-groupcases
@@ -241,9 +243,9 @@
   [& cases]
   (doseq [{:keys [name model handlers render group]} cases]
     (let [tgp (public/compile-template-group slot-compiler group)]
-      (is (thrown? RuntimeException (re-pattern render)
-                   (public/render-by-name tgp name (filter identity
-                                                           [model handlers])))
+      (is (thrown-with-msg?
+            RuntimeException (ambi/re-quote render)
+            (public/render-by-name tgp name (filter identity [model handlers])))
           name))))
 
 
@@ -277,10 +279,10 @@
                  :b "<% (include :c) %>"}]
       (run-groupcases-thrown
         {:name   :c
-         :render "ERROR: [Render] No such template name/key: ':c' in ':c' at row 0, col 0 (pos 0)"
+         :render "[Render] No such template name/key: ':c' in ':c' at row 0, col 0 (pos 0)"
          :group  group}
         {:name   :b
-         :render "ERROR: [Render] No such template name/key: ':c' in ':b' at row 1, col 3 (pos 3)"
+         :render "[Render] No such template name/key: ':c' in ':b' at row 1, col 3 (pos 3)"
          :group  group}))))
 
 
