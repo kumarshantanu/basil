@@ -1,5 +1,5 @@
 (ns basil.testvars-cljs
-  (:require [basil.cljs :as cljs]))
+  (:require [basil.public-cljs :as cljs]))
 
 
 (def slot-compiler cljs/slot-compiler)
