@@ -1,8 +1,9 @@
 (ns basil.public-cljs
   (:require [cljs.reader :as reader]
+            [basil.error :as error]
             [basil.slot  :as slot]
             [basil.types :as types])
-  (:use;*CLJSBUILD-REMOVE*;-macros
+  (:use-macros ;;--not used in CLJS file--;*CLJSBUILD-REMOVE*;-macros
     [basil.util-macro :only [defn-binding]]))
 
 
