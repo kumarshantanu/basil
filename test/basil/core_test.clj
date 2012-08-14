@@ -9,7 +9,7 @@
                 slot-compiler]])
   (:use;*CLJSBUILD-REMOVE*;-macros
     [clojure.test;*CLJSBUILD-REMOVE*;-cljs
-     ]))
+     :only [deftest testing is thrown? thrown-with-msg?]]))
 
 
 (defn run-testcases
@@ -286,8 +286,7 @@
          :group  group}))))
 
 
-(defn ^:export
-       test-ns-hook []
+(defn test-ns-hook []
   (test-static-templates-happy)
   (test-static-templates-error)
   (test-template-empty-slot)

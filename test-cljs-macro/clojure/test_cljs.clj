@@ -24,13 +24,13 @@
 
 (defmacro thrown?
   [ex-class & body]
-  `(try ~@body
-     (catch js/Error err#
+  '`(try ~@body
+     (catch ~'js/Error err#
        true)))
 
 
 (defmacro thrown-with-msg?
   [ex-class msg-regex & body]
-  `(try ~@body
-     (catch js/Error err#
+  '`(try ~@body
+     (catch ~'js/Error err#
        (boolean (re-find ~msg-regex (.message err#))))))
