@@ -23,7 +23,7 @@
                            (number? col)
                            (number? pos)
                            (or (nil? chr)
-                               (char? chr))]}
+                               (vars/*char?* chr))]}
   (cond
     (nil? chr)       [row       col                            pos]
     (= chr \newline) [(inc row) 1                              (inc pos)]

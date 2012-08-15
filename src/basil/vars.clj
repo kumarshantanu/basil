@@ -1,9 +1,8 @@
-(ns basil.vars)
+(ns basil.vars
+  "Freestanding dynamic vars")
 
 
-;; "Freestanding dynamic vars"
-;; Docstring not allowed in ns macro in ClojureScript yet
-;; http://dev.clojure.org/jira/browse/CLJS-86
+;; ----- Template related -----
 
 
 (def ^{:dynamic true
@@ -24,3 +23,21 @@
 (def ^{:dynamic true
        :doc     "Collections of locals for the current rendering"}
   *locals-coll* [])
+
+
+;; ----- Platform specific -----
+
+
+(def ^{:dynamic true
+       :doc "In JavaScript, every char is a string"}
+      *char?* (fn [x] (assert (not "You must override *char?*"))))
+
+
+(def ^{:dynamic true
+       :doc "Equivalent of Pattern/quote"}
+      *re-quote* (fn [x] (assert (not "You must override *re-quote*"))))
+
+
+(def ^{:dynamic true
+       :doc ""}
+      *error* (fn [x] (assert (not "You must override *error*"))))

@@ -1,9 +1,9 @@
 (ns basil.core-test
-  (:require [basil.ambiguous :as ambi]
-            [basil.public;*CLJSBUILD-REMOVE*;-cljs
+  (:require [basil.public;*CLJSBUILD-REMOVE*;-cljs
                          :as public]
             [basil.types :as types]
-            [basil.util  :as util])
+            [basil.util  :as util]
+            [basil.vars  :as vars])
   (:use [basil.testvars;*CLJSBUILD-REMOVE*;-cljs
          :only [;*CLJSBUILD-REMOVE*;RuntimeException
                 slot-compiler]])
@@ -26,7 +26,7 @@
   [& cases]
   (doseq [{:keys [name templt model handlers render]} cases]
     (is (thrown-with-msg?
-          RuntimeException (ambi/re-quote render)
+          RuntimeException (vars/*re-quote* render)
           (public/parse-compile-render
             slot-compiler templt name (filter identity [model handlers])))
         name)))
@@ -245,7 +245,7 @@
   (doseq [{:keys [name model handlers render group]} cases]
     (let [tgp (public/compile-template-group slot-compiler group)]
       (is (thrown-with-msg?
-            RuntimeException (ambi/re-quote render)
+            RuntimeException (vars/*re-quote* render)
             (public/render-by-name tgp name (filter identity [model handlers])))
           name))))
 

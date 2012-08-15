@@ -8,10 +8,11 @@
             [basil.types :as types]
             [basil.util  :as util]
             [basil.vars  :as vars])
-  (:use;*CLJSBUILD-REMOVE*;-macros
-    [basil.util-macro :only [defn-binding]])
+  (:use ;;--not used--;*CLJSBUILD-REMOVE*;-macros
+    [basil.core-macro :only [defn-binding]])
   (:import (java.io  File)
-           (java.net URL)))
+           (java.net URL)
+           (java.util.regex Pattern)))
 
 
 (def slot-compiler (slot/make-slot-compiler read-string))
@@ -21,6 +22,16 @@
   "Error handler for the JVM that throws exception instead of error messages."
   [text] {:pre [(types/error-text? text)]}
   (throw (RuntimeException. ^String (str (:text text)))))
+
+
+(defn init-vars
+  []
+  (alter-var-root #'vars/*char?*    (constantly char?))
+  (alter-var-root #'vars/*re-quote* (constantly #(re-pattern (Pattern/quote %)))))
+
+
+;; Initialize platform-specific vars so that we don't need to rebind them
+(init-vars)
 
 
 ;; ----- Public functions from basil.core

@@ -2,9 +2,10 @@
   (:require [cljs.reader :as reader]
             [basil.error :as error]
             [basil.slot  :as slot]
-            [basil.types :as types])
+            [basil.types :as types]
+            [basil.vars  :as vars])
   (:use-macros ;;--not used in CLJS file--;*CLJSBUILD-REMOVE*;-macros
-    [basil.util-macro :only [defn-binding]]))
+    [basil.core-macro :only [defn-binding]]))
 
 
 (def slot-compiler (slot/make-slot-compiler reader/read-string))
@@ -14,6 +15,16 @@
   "Error handler for ClojureScript that throws exception instead of error messages."
   [text] {:pre [(types/error-text? text)]}
   (throw (js/Error ^String (str (:text text)))))
+
+
+(defn init-vars
+  []
+  (set! vars/*char?*    string?)
+  (set! vars/*re-quote* re-pattern))
+
+
+;; Initialize platform-specific vars so that we don't need to rebind them
+(init-vars)
 
 
 ;; ----- Public functions from basil.core

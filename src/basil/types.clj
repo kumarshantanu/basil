@@ -1,10 +1,6 @@
 (ns basil.types
-  (:require [basil.ambiguous :as ambi]))
-
-
-;; "Typed abstractions"
-;; Docstring not allowed in ns macro in ClojureScript yet
-;; http://dev.clojure.org/jira/browse/CLJS-86
+  "Typed abstractions"
+  (:require [basil.vars :as vars]))
 
 
 ;; [Text]
@@ -26,7 +22,7 @@
   [s]
   (or (string? s)
       (and (coll? s)
-           (every? ambi/char? s))))
+           (every? vars/*char?* s))))
 
 
 (defn text?
