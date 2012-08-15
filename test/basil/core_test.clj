@@ -90,7 +90,8 @@
     (run-testcases-thrown
       ;; empty slot
       {:name   "Empty slot"
-       :templt "<%%>" :render "EOF while reading"})))
+       :templt "<%%>"
+       :render "EOF while reading"})))
 
 
 (deftest test-slot-with-literals
