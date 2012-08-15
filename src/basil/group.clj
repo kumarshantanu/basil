@@ -67,30 +67,6 @@
                  [nil (no-such-name %)])))
 
 
-(defn make-cached-group
-  "Given f-now        (no-arg fn that returns current time in millis),
-         f-obtain     (as in basil.group/make-group),
-     and cache-millis (long)
-  create a cached group that re-obtains template only after cache-millis or
-  more milliseconds have elapsed since last obtain."
-  [f-now f-obtain cache-millis]
-  (let [is-cache? (zero? cache-millis)
-        last-read (ref {})
-        find-last #(get @last-read %)
-        kill-last #(dosync (alter last-read dissoc %))
-        save-last (fn [k v] (dosync (alter last-read assoc k [(f-now) v])))]
-    (make-group (fn [name]
-                  (if-let [cache-value (let [[t v] (find-last name)]
-                                         (and is-cache? t
-                                              (< (- (f-now) t) cache-millis)
-                                              v))]
-                    cache-value
-                    (let [[t e] (f-obtain name)]
-                      (if e (kill-last name)
-                        (save-last name [t e]))
-                      [t e]))))))
-
-
 (def ^{:dynamic true
        :doc "Group of templates paired by template-name and compiled-text"}
   *template-group* (make-group-from-map {}))

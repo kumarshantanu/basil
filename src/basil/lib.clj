@@ -5,14 +5,6 @@
             [clojure.string :as str]))
 
 
-(defn clojure-core-publics
-  "Return the public vars in clojure.core as a map, suitable for use as locals."
-  []
-  (reduce (fn [m [n v]]
-            (merge m {(keyword n) (deref v)}))
-          {} (filter first (ns-publics 'clojure.core))))
-
-
 (defn auto-str
   "Automaticlly convert `x` to appropriate representation of string."
   [x]

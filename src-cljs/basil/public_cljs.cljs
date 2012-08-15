@@ -1,5 +1,6 @@
 (ns basil.public-cljs
   (:require [cljs.reader :as reader]
+            [basil.core  :as core]
             [basil.error :as error]
             [basil.slot  :as slot]
             [basil.types :as types]
