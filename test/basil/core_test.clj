@@ -9,7 +9,8 @@
                 slot-compiler]])
   (:use;*CLJSBUILD-REMOVE*;-macros
     [clojure.test;*CLJSBUILD-REMOVE*;-cljs
-     :only [deftest testing is thrown? thrown-with-msg?]]))
+     ;*CLJSBUILD-REMOVE*;:only [deftest testing is thrown? thrown-with-msg?]
+     ]))
 
 
 (defn run-testcases
