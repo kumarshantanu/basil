@@ -1,6 +1,7 @@
 ;*CLJSBUILD-MACRO-FILE*;
 
-(ns clojure.test-cljs)
+(ns clojure.test-cljs
+  (:use [basil.util :only [*try-catch*]]))
 
 
 (defmacro deftest
@@ -23,14 +24,20 @@
 
 
 (defmacro thrown?
-  [ex-class & body]
-  '`(try ~@body
+  "Rebind *try-catch* before calling this, so that the effect is same as:
+  `(try ~@body
      (catch ~'js/Error err#
-       true)))
+       true))"
+  [ex-class & body]
+  `(try-catch #(do ~@body)
+              (constantly true)))
 
 
 (defmacro thrown-with-msg?
-  [ex-class msg-regex & body]
-  '`(try ~@body
+  "Rebind *try-catch* before calling this, so that the effect is same as:
+  `(try ~@body
      (catch ~'js/Error err#
-       (boolean (re-find ~msg-regex (.message err#))))))
+       (boolean (re-find ~msg-regex (.message err#)))))"
+  [ex-class msg-regex & body]
+  `(try-catch #(do ~@body)
+              (fn [err#] (boolean (re-find ~msg-regex (.message err#))))))

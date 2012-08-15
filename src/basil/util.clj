@@ -19,6 +19,21 @@
     x))
 
 
+(def ^{:dynamic true
+       :doc
+       "Handler fn that takes 2 args `try-f` (fn that takes no arg) and `catch-f`
+  (fn that takes the exception object as only arg.) You must rebind `try-catch`
+  in CLJS as follows:
+
+  (binding [*try-catch* (fn [try-f catch-f]
+                          (try (try-f)
+                            (catch js/Error err#
+                              (catch-f err#)))]
+    ...)"}
+      *try-catch*
+  (fn [try-f catch-f] (assert (not "Rebind *try-catch* as per documentation"))))
+
+
 ;; ===== Tuple utilities =====
 
 
