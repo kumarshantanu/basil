@@ -43,5 +43,8 @@
                 (fn [err#]
                   (or ;(boolean (re-find ~msg-regex (.-message err#)))
                       (= (.-source ~msg-regex) (.-message err#))
-                      (println (str "Actual mesage: " (.-message err#))))
+                      (println (str "Expected regex:"
+                                    (pr-str (.-source ~msg-regex))
+                                    ", Actual mesage: "
+                                    (pr-str (.-message err#)))))
                   )))
