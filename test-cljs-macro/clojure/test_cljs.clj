@@ -29,7 +29,7 @@
      (catch ~'js/Error err#
        true))"
   [ex-class & body]
-  `(*try-catch* #(do ~@body)
+  `(*try-catch* #(do ~@body false)
                 (constantly true)))
 
 
@@ -39,6 +39,9 @@
      (catch ~'js/Error err#
        (boolean (re-find ~msg-regex (.message err#)))))"
   [ex-class msg-regex & body]
-  `(*try-catch* #(do ~@body)
-                (fn [err#] ;(boolean (re-find ~msg-regex (.-message err#)))
-                  (= (.-source ~msg-regex) (.-message err#)))))
+  `(*try-catch* #(do ~@body false)
+                (fn [err#]
+                  (or ;(boolean (re-find ~msg-regex (.-message err#)))
+                      (= (.-source ~msg-regex) (.-message err#))
+                      (println (str "Actual mesage: " (.-message err#))))
+                  )))
