@@ -41,10 +41,10 @@
   [ex-class msg-regex & body]
   `(*try-catch* #(do ~@body false)
                 (fn [err#]
-                  (or ;(boolean (re-find ~msg-regex (.-message err#)))
-                      (= (.-source ~msg-regex) (.-message err#))
-                      (println (str "Expected regex:"
-                                    (pr-str (.-source ~msg-regex))
+                  (or (if (string? ~msg-regex)
+                        (= ~msg-regex (.-message err#))
+                        (boolean (re-find ~msg-regex (.-message err#))))
+                      (println (str "Expected message:"
+                                    (pr-str ~msg-regex)
                                     ", Actual mesage: "
-                                    (pr-str (.-message err#)))))
-                  )))
+                                    (pr-str (.-message err#))))))))
