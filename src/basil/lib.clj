@@ -16,6 +16,14 @@
         :otherwise  (str x)))
 
 
+(defn partiar
+  "Like `clojure.core/partial`, but applies cached aruments *after* the new
+  arguments."
+  [f & args]
+  (fn [& fargs]
+    (apply f (concat fargs args))))
+
+
 (defn entities
   "Given a map `m` and a string `x`, replace every character in `x` by looking
   up in `m`, combine the result as a string and return it."
@@ -148,27 +156,66 @@
        serial (partition 2 (flatten (repeat decors-format)))))
 
 
+(defn mapseq->keys
+  "Given a sequence of maps `mapseq`, return the keys by looking at the first
+  map element in the sequence."
+  [mapseq]
+  (keys (first mapseq)))
+
+
+(defn mapseq->valrows
+  "Given a sequence of maps `mapseq` (and optionally a sequence of keys `ks`),
+  return a sequence of value sequences."
+  ([mapseq]
+    (mapseq->valrows mapseq (mapseq->keys mapseq)))
+  ([mapseq ks]
+    (map #(map % ks) mapseq)))
+
+
+(defn html-th
+  [rows]
+  (format-rows rows ["<th>" "</th>\n"]))
+
+
+(defn html-td
+  [rows]
+  (format-rows rows ["<td>" "</td>\n"]))
+
+
+(defn html-tr
+  ([rows]
+    (html-tr rows html-td))
+  ([rows html-td] {:pre [(fn? html-td)]}
+    (format-rows (map html-td rows) ["<tr>\n" "</tr>\n"])))
+
+
 (def ^{:doc "Default filter functions"}
   default-handlers
   {;; generic string conversion
    :apply         apply
    :auto-str      auto-str
    :default       auto-str
-   :identity      identity
-   :partial       partial
    :seq           seq
    :str           str
    :str-join      str/join
    :str-br        (partial str/join "<br/>\n")
    :str-newline   (partial str/join "\n")
+   ;; currying and HoF
+   :identity      identity
+   :partial       partial
+   :partiar       partiar
    ;; conditionals
    :when          (fn [test f & more] (when     test (apply f more)))
    :when-not      (fn [test f & more] (when-not test (apply f more)))
    :for-each      (fn [k-bindings f & more] (for-each k-bindings f more))
    ;; formatting
-   :format-rows    format-rows   ;; args -- rows decors
-   :serial-decors  serial-decors ;; args -- serial decor-format-coll
-   :html-tr       (fn [rows] (format-rows rows ["<tr>" "</tr>\n"]))
+   :format-rows    format-rows   ;; args -- [rows decors]
+   :serial-decors  serial-decors ;; args -- [serial decor-format-coll]
+   :mapseq->keys  mapseq->keys   ;; args -- [mapseq]
+   :mapseq->rows  mapseq->valrows ;; args -- [mapseq] [mapseq ks]
+   :html-tr       html-tr        ;; args -- [rows] [rows html-td]
+   :html-th       html-th        ;; args -- [rows]
+   :html-td       html-td        ;; args -- [rows]
    :html-li       (fn [rows] (format-rows rows ["<li>" "</li>\n"]))
    :html-option   (fn [rows] (format-rows rows ["<option>" "</option>"]))
    :html-option-v (fn [vals rows] (->> ["<option value='%s'>" "</option>"]

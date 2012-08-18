@@ -8,7 +8,15 @@
                 slot-compiler]])
   (:use;*CLJSBUILD-REMOVE*;-macros
     [clojure.test;*CLJSBUILD-REMOVE*;-cljs
+     ;*CLJSBUILD-REMOVE*;:only [deftest testing is thrown? thrown-with-msg?]
      ]))
+
+
+(deftest test-currying
+  (testing
+    "partiar ('partial' with reversed argument blocks)"
+    (let [r (lib/partiar str 1 2 3)]
+      (is (= "789123" (r 7 8 9))))))
 
 
 (defn render
@@ -47,6 +55,41 @@
                    [{:users users}])))))
 
 
-(defn ;;^:export
-       test-ns-hook []
-  (test-formatting-fns))
+(def table-data
+  [(array-map :name "Abdul" :age 34)
+   (array-map :name "Saira" :age 41)])
+
+
+(deftest test-html-table
+  (testing
+    "table columns"
+    (is (= "<td>foo</td>\n<td>bar</td>\n"
+           (render "<% (html-td users) %>"
+                   "html-td"
+                   [{:users users}])))
+    (is (= "<th>foo</th>\n<th>bar</th>\n"
+           (render "<% (html-th users) %>"
+                   "html-th"
+                   [{:users users}]))))
+  (testing
+    "table data transformation"
+    (is (= ":name\n:age"
+           (render "<% (mapseq->keys table-data) %>"
+                   "mapseq->keys"
+                   [{:table-data table-data}])))
+    (is (= "Abdul\n34\nSaira\n41"
+           (render "<% (mapseq->rows table-data) %>"
+                   "mapseq->rows"
+                   [{:table-data table-data}]))))
+  (testing
+    "table rows"
+    (is (= "<tr>\n<td>Abdul</td>\n<td>34</td>\n</tr>\n<tr>\n<td>Saira</td>\n<td>41</td>\n</tr>\n"
+           (render "<% (html-tr (mapseq->rows table-data)) %>"
+                   "html-tr"
+                   [{:table-data table-data}])))))
+
+
+(defn test-ns-hook []
+  (test-currying)
+  (test-formatting-fns)
+  (test-html-table))
