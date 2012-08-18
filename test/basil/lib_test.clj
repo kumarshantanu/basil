@@ -1,8 +1,9 @@
 (ns basil.lib-test
-  (:require [basil.core  :as core]
-            [basil.lib   :as lib]
-            [basil.types :as types]
-            [basil.util  :as util])
+  (:require [basil.public;*CLJSBUILD-REMOVE*;-cljs
+                          :as public]
+            [basil.lib    :as lib]
+            [basil.types  :as types]
+            [basil.util   :as util])
   (:use [basil.testvars;*CLJSBUILD-REMOVE*;-cljs
          :only [;*CLJSBUILD-REMOVE*;RuntimeException
                 slot-compiler]])
@@ -21,7 +22,7 @@
 
 (defn render
   [template t-name locals]
-  (core/parse-compile-render
+  (public/parse-compile-render
     slot-compiler template t-name locals))
 
 
