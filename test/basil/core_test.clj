@@ -91,9 +91,9 @@
       ;; empty slot
       {:name   "Empty slot"
        :templt "<%%>"
-       ;; Bug: http://dev.clojure.org/jira/browse/CLJS-356
-       :render #"EOF.*" ;; TODO: replace with "EOF while reading"
-       })))
+       ;; TODO: replace with "EOF while reading"
+       ;; See bug: http://dev.clojure.org/jira/browse/CLJS-356
+       :render #"EOF.*"})))
 
 
 (deftest test-slot-with-literals
