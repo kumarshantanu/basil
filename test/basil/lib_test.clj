@@ -90,7 +90,27 @@
                    [{:table-data table-data}])))))
 
 
+(deftest test-html-escaping
+  (testing
+    "html-safe"
+    (is (= "&lt;a href='http://google.com'&gt;Google&lt;/a&gt;"
+           (render "<%(html-safe text)%>"
+                   "html-safe escapes"
+                   [{:text "<a href='http://google.com'>Google</a>"}])))
+    (is (= "Foo &amp; Bar"
+           (render "<%(html-safe text)%>"
+                   "html-safe ignores nbsp"
+                   [{:text "Foo & Bar"}]))))
+  (testing
+    "html-nbsp"
+    (is (= "Foo&nbsp;&amp;&nbsp;Bar"
+           (render "<%(html-nbsp text)%>"
+                   "html-nbsp escapes space"
+                   [{:text "Foo & Bar"}])))))
+
+
 (defn test-ns-hook []
   (test-currying)
   (test-formatting-fns)
-  (test-html-table))
+  (test-html-table)
+  (test-html-escaping))

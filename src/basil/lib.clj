@@ -30,7 +30,7 @@
   [m x] {:pre [(map? m)
                (string? x)]}
   (->> (seq x)
-    (map #(get m x %))
+    (map #(get m (str %) %))
     (util/redstr)))
 
 
