@@ -2,6 +2,7 @@
   "Library of filter/handler functions"
   (:require [basil.group    :as group]
             [basil.util     :as util]
+            [basil.vars     :as vars]
             [clojure.string :as str]))
 
 
@@ -189,6 +190,13 @@
     (format-rows (map html-td rows) ["<tr>\n" "</tr>\n"])))
 
 
+(defn include-with-locals
+  "Same as 'include', but uses `m` as locals too."
+  [m template-name] {:pre [(map? m)]}
+  (binding [vars/*locals-coll* (cons m vars/*locals-coll*)]
+    (group/render-by-name* template-name)))
+
+
 (def ^{:doc "Default filter functions"}
   default-handlers
   {;; generic string conversion
@@ -204,10 +212,11 @@
    :identity      identity
    :partial       partial
    :partiar       partiar
-   ;; conditionals
+   ;; conditionals and iteration
    :when          (fn [test f & more] (when     test (apply f more)))
    :when-not      (fn [test f & more] (when-not test (apply f more)))
    :for-each      (fn [k-bindings f & more] (for-each k-bindings f more))
+   :with-locals   (fn [m f & args])
    ;; formatting
    :format-rows    format-rows   ;; args -- [rows decors]
    :serial-decors  serial-decors ;; args -- [serial decor-format-coll]
@@ -225,7 +234,8 @@
    :html-safe     html-safe
    :html-nbsp     html-nbsp
    ;; including other templates
-   :include       group/render-by-name*})
+   :include       group/render-by-name*
+   :include-with  include-with-locals})
 
 
 (def ^{:doc "Default model"}
