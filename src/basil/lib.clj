@@ -194,12 +194,10 @@
   "Find specified template by name in the current group and render it. Use the
   locals if specified."
   ([template-name]
-    (binding [vars/*template-name* template-name]
-      (group/render-by-name* template-name)))
+    (group/render-by-name* template-name))
   ([template-name & locals]
     {:pre [(every? map? locals)]}
-    (binding [vars/*template-name* template-name
-              vars/*locals-coll*   (concat locals vars/*locals-coll*)]
+    (binding [vars/*locals-coll*   (concat locals vars/*locals-coll*)]
       (group/render-by-name* template-name))))
 
 

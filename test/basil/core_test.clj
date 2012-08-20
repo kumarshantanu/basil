@@ -280,14 +280,19 @@
   (testing
     "Missing templates in groups"
     (let [group {:a "Static"
-                 :b "<% (include :c) %>"}]
+                 :b "<% (include :c) %>"
+                 :d "<% (include :e) %>"
+                 :e "<% foo %>"}]
       (run-groupcases-thrown
         {:name   :c
          :render "[Render] No such template name/key: ':c' in ':c' at row 0, col 0 (pos 0)"
          :group  group}
         {:name   :b
          :render "[Render] No such template name/key: ':c' in ':b' at row 1, col 3 (pos 3)"
-         :group  group}))))
+         :group  group}
+        {:name   :d
+         :render "[Render] No such local-key 'foo' in ':e' at row 1, col 3 (pos 3)"
+         :group group}))))
 
 
 (defn test-ns-hook []

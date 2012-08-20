@@ -81,7 +81,8 @@
                                               (verify util/pair?))]
       (if error-text
         (:text error-text)
-        (render/render-template* compiled-template))))
+        (binding [vars/*template-name* template-name]
+          (render/render-template* compiled-template)))))
   ([template-name]
     {:pre [(template-group? *template-group*)]}
     (render-by-name* *template-group* template-name)))
