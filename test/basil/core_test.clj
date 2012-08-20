@@ -26,7 +26,7 @@
   [& cases]
   (doseq [{:keys [name templt model handlers render]} cases]
     (is (thrown-with-msg?
-          RuntimeException (vars/*re-quote* render)
+          RuntimeException (vars/re-quote render)
           (public/parse-compile-render
             slot-compiler templt name (filter identity [model handlers])))
         name)))
@@ -248,7 +248,7 @@
   (doseq [{:keys [name model handlers render group]} cases]
     (let [tgp (public/compile-template-group slot-compiler group)]
       (is (thrown-with-msg?
-            RuntimeException (vars/*re-quote* render)
+            RuntimeException (vars/re-quote render)
             (public/render-by-name tgp name (filter identity [model handlers])))
           name))))
 

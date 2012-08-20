@@ -30,14 +30,9 @@
 
 (def ^{:dynamic true
        :doc "In JavaScript, every char is a string"}
-      *char?* (fn [x] (assert (not "You must override *char?*"))))
+      x-char? (fn [x] (assert (not "You must alter-var-root/set! 'x-char?'"))))
 
 
 (def ^{:dynamic true
        :doc "Equivalent of Pattern/quote"}
-      *re-quote* (fn [x] (assert (not "You must override *re-quote*"))))
-
-
-(def ^{:dynamic true
-       :doc ""}
-      *error* (fn [x] (assert (not "You must override *error*"))))
+      re-quote (fn [x] (assert (not "You must alter-var-root/set! 're-quote'"))))

@@ -22,7 +22,7 @@
   [s]
   (or (string? s)
       (and (coll? s)
-           (every? vars/*char?* s))))
+           (every? vars/x-char? s))))
 
 
 (defn text?

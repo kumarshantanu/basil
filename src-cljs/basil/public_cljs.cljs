@@ -20,8 +20,8 @@
 
 (defn init-vars
   []
-  (set! vars/*char?*    string?)
-  (set! vars/*re-quote* identity))
+  (set! vars/x-char?  string?)
+  (set! vars/re-quote identity))
 
 
 ;; Initialize platform-specific vars so that we don't need to rebind them

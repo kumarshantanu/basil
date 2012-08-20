@@ -26,10 +26,10 @@
 
 (defn init-vars
   []
-  (alter-var-root #'vars/*char?*    (constantly char?))
-  (alter-var-root #'vars/*re-quote* (constantly #(if (string? %)
-                                                   (re-pattern (Pattern/quote %))
-                                                   %))))
+  (alter-var-root #'vars/x-char?  (constantly char?))
+  (alter-var-root #'vars/re-quote (constantly #(if (string? %)
+                                                 (re-pattern (Pattern/quote %))
+                                                 %))))
 
 
 ;; Initialize platform-specific vars so that we don't need to rebind them
