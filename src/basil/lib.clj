@@ -190,11 +190,15 @@
     (format-rows (map html-td rows) ["<tr>\n" "</tr>\n"])))
 
 
-(defn include-with-locals
-  "Same as 'include', but uses `m` as locals too."
-  [m template-name] {:pre [(map? m)]}
-  (binding [vars/*locals-coll* (cons m vars/*locals-coll*)]
-    (group/render-by-name* template-name)))
+(defn include
+  "Find specified template by name in the current group and render it. Use the
+  locals if specified."
+  ([template-name]
+    (group/render-by-name* template-name))
+  ([template-name & locals]
+    {:pre [(every? map? locals)]}
+    (binding [vars/*locals-coll* (concat locals vars/*locals-coll*)]
+      (group/render-by-name* template-name))))
 
 
 (def ^{:doc "Default filter functions"}
@@ -212,19 +216,22 @@
    :identity      identity
    :partial       partial
    :partiar       partiar
-   ;; conditionals and iteration
+   ;; conditionals and iteration (for the lack of macros)
    :when          (fn [test f & more] (when     test (apply f more)))
    :when-not      (fn [test f & more] (when-not test (apply f more)))
    :for-each      (fn [k-bindings f & more] (for-each k-bindings f more))
-   :with-locals   (fn [m f & args])
+   :with-locals   (fn [locals f & args] {:pre [(every? map? locals)
+                                               (not (nil? f))]}
+                    (binding [vars/*locals-coll* (concat locals vars/*locals-coll*)]
+                      (apply f args)))
    ;; formatting
-   :format-rows    format-rows   ;; args -- [rows decors]
-   :serial-decors  serial-decors ;; args -- [serial decor-format-coll]
-   :mapseq->keys  mapseq->keys   ;; args -- [mapseq]
+   :format-rows   format-rows     ;; args -- [rows decors]
+   :serial-decors serial-decors   ;; args -- [serial decor-format-coll]
+   :mapseq->keys  mapseq->keys    ;; args -- [mapseq]
    :mapseq->rows  mapseq->valrows ;; args -- [mapseq] [mapseq ks]
-   :html-tr       html-tr        ;; args -- [rows] [rows html-td]
-   :html-th       html-th        ;; args -- [rows]
-   :html-td       html-td        ;; args -- [rows]
+   :html-tr       html-tr         ;; args -- [rows] [rows html-td]
+   :html-th       html-th         ;; args -- [rows]
+   :html-td       html-td         ;; args -- [rows]
    :html-li       (fn [rows] (format-rows rows ["<li>" "</li>\n"]))
    :html-option   (fn [rows] (format-rows rows ["<option>" "</option>"]))
    :html-option-v (fn [vals rows] (->> ["<option value='%s'>" "</option>"]
@@ -234,8 +241,7 @@
    :html-safe     html-safe
    :html-nbsp     html-nbsp
    ;; including other templates
-   :include       group/render-by-name*
-   :include-with  include-with-locals})
+   :include       include})
 
 
 (def ^{:doc "Default model"}
