@@ -64,7 +64,7 @@
   [coll] {:post [(string? %)]
           :pre  [(or (coll? coll)
                      (seq? coll))]}
-  (reduce str "" coll))
+  (apply str "" coll))
 
 
 (defn drop-last-while
