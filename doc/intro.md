@@ -142,9 +142,9 @@ Shadowing them with your own version is not recommended.
 |html-option-v| vals rows             | Same as `html-option` but assigns value='%s' from `vals` |
 |mapseq->keys | mapseq                | Return the keys from sequence of maps |
 |mapseq->rows | [mapseq] [mapseq ks]  | Return the sequence of rows values |
-|html-tr      | [rows] [rows html-td] | Generate <tr>..</tr> using `rows` data and `html-td` fn |
-|html-th      | [rows]                | Generate <th>..</th> using `rows` data |
-|html-td      | [rows]                | Generate <td>..</td> using `rows` data |
+|html-tr      | [rows] [rows html-td] | Generate &lt;tr&gt;..&lt;/tr&gt; using `rows` data and `html-td` fn |
+|html-th      | [rows]                | Generate &lt;th&gt;..&lt;/th&gt; using `rows` data |
+|html-td      | [rows]                | Generate &lt;td&gt;..&lt;/td&gt; using `rows` data |
 
 
 **HTML-escaping**
