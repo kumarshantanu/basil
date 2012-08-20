@@ -1,10 +1,10 @@
-Changes and TODO
+#Changes and TODO
 
 
-## 2012-????-?? / 0.2.0
+## 2012-????-?? / 0.3.0
 
 * [TODO] ClojureScript support
-* [TODO] Abstract out string concatenation
+* [TODO] Investigate abstracting out string concatenation
   * Auto-select efficient JVM/CLJS specific concatenation
   * Use java.lang.StringBuilder on the JVM
   * See https://github.com/clojure/clojurescript/wiki/Differences-from-Clojure
@@ -17,9 +17,15 @@ Changes and TODO
 ```
 
 * [TODO] Filter fns for reversing HTML entities
-* [TODO] Streamlined filter-fns for HTML generation, esp collections
+
+
+## 2012-August-21 / 0.2.0
+
+* Streamlined filter-fns for HTML generation, esp collections
+* Library functions for 'locals scope'
 * Error reporting must throw exception by default
-  * New API basil.public[-cljs] to implicitly use JVM/CLJS error-handler
+  * implicitly uses JVM/CLJS error-handler
+* New API basil.public[-cljs]
 
 
 ## 2012-August-08 / 0.1.0

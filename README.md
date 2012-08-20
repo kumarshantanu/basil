@@ -1,7 +1,6 @@
 # basil
 
-Basil is a flavored templating library for Clojure, inspired by a number of
-templating systems such as Enlive, JSTL and Jinja2.
+Basil is a flavored templating library for Clojure.
 
 **Important:** Consider this library in _ALPHA_ until this notice is removed.
 API and implementation will change in incompatible ways. You have been warned.
@@ -11,7 +10,7 @@ API and implementation will change in incompatible ways. You have been warned.
 
 On Clojars: https://clojars.org/basil
 
-Leiningen dependency: `[basil "0.1.0"]`
+Leiningen dependency: `[basil "0.2.0"]`
 
 
 This page has only elementary documentation.
@@ -100,19 +99,20 @@ bar</td>
   </tr>
 </table>
 
-Use `basil.core/parse-compile` to parse and compile a template and use
-`basil.core/render-template` to render a compiled template.
+Use `basil.public/parse-compile` to parse and compile a template and use
+`basil.public/render-template` to render a compiled template.
 
 
 ### Template Groups
 
 Template groups can be created from directory or classpath. A slot in one
 template can include an entire template dynamically using
-`<% (include "foo.basil") %>`.
+`<% (include "foo.basil") %>`. You may also create additional context for
+included template using `<% (include "foo.basil" {:a 10 :b 20} {:items xs}) %>`.
 
-Use `basil.jvm/make-group-from-directory` and
-`basil.jvm/make-group-from-classpath` to create template groups. Use
-`basil.core/render-by-name` to render a template from a group.
+Use `basil.public/make-group-from-directory` and
+`basil.public/make-group-from-classpath` to create template groups. Use
+`basil.public/render-by-name` to render a template from a group.
 
 
 ## Getting in touch

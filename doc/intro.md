@@ -123,11 +123,12 @@ Shadowing them with your own version is not recommended.
 
 **Conditionals**
 
-|Function|Arguments            |Description|
-|--------|---------------------|-----------|
-|when    | test f & args       | When `test` is true, invoke `f` with `args` |
-|when-not| test f & args       | When `test` is false, invoke `f` with `args` |
-|for-each| k-bindings f & args | Iterate over collection(s) and invoke `f` with `args` on each pass |
+|Function   |Arguments            |Description|
+|-----------|---------------------|-----------|
+|when       | test f & args       | When `test` is true, invoke `f` with `args` |
+|when-not   | test f & args       | When `test` is false, invoke `f` with `args` |
+|for-each   | k-bindings f & args | Iterate over collection(s) and invoke `f` with `args` on each pass |
+|with-locals| locals f & args     | Invoke `f` with `args` in context of specified locals|
 
 
 **Formatting**
@@ -136,10 +137,14 @@ Shadowing them with your own version is not recommended.
 |-------------|-----------------------|-----------|
 |format-rows  | rows decors           | Prefix/suffix every element in `rows` using `decors` |
 |serial-decors| serial decor-fmt-coll | Create decoration for `format-rows` using `serial` |
-|html-tr      | rows                  | Same as `(format-rows rows ["<tr>" "</tr>\n"])` |
 |html-li      | rows                  | Same as `(format-rows rows ["<li>" "</li>\n"])` |
 |html-option  | rows                  | Same as `(format-rows rows ["<option>" "</option>"])` |
-|html-option-v| vals rows             | Same as `(format-rows rows (serial-decors vals ["<option value='%s'>" "</option>"]))` |
+|html-option-v| vals rows             | Same as `html-option` but assigns value='%s' from `vals` |
+|mapseq->keys | mapseq                | Return the keys from sequence of maps |
+|mapseq->rows | [mapseq] [mapseq ks]  | Return the sequence of rows values |
+|html-tr      | [rows] [rows html-td] | Generate <tr>..</tr> using `rows` data and `html-td` fn |
+|html-th      | [rows]                | Generate <th>..</th> using `rows` data |
+|html-td      | [rows]                | Generate <td>..</td> using `rows` data |
 
 
 **HTML-escaping**
@@ -152,9 +157,9 @@ Shadowing them with your own version is not recommended.
 
 **Including other templates**
 
-|Function | Arguments | Description |
-|---------|-----------|-------------|
-|include  | t-name    | fetch template from group by name and render it as string |
+|Function | Arguments       | Description |
+|---------|-----------------|-------------|
+|include  | t-name & locals | fetch template from group by name and render it as string, using `locals` if specified |
 
 
 ## Phases of a template
@@ -205,8 +210,8 @@ template groups.
 Creating a template group from a map is easy:
 
 ```clojure
-(def g (basil.core/compile-template-group
-         basil.jvm/slot-compiler
+(def g (basil.public/compile-template-group
+         basil.public/slot-compiler
          {:tpl-1 "Hello, <% name %>!"
           :tpl-2 (slurp "tpl/activity.basil")
           :tpl-3 "<% (include :tpl-1) %>\n Welcome."}))
@@ -215,9 +220,9 @@ Creating a template group from a map is easy:
 Note that you need a JVM-based '_slot_ compiler'. Rendering a group is easy:
 
 ```clojure
-(basil.core/render-by-name g :tpl-1 [{:name "Morris"}])
+(basil.public/render-by-name g :tpl-1 [{:name "Morris"}])
 => "Hello, Morris!"
-(basil.core/render-by-name g :tpl-3 [{:name "Morris"}])
+(basil.public/render-by-name g :tpl-3 [{:name "Morris"}])
 => "Hello, Morris!
 Welcome."
 ```
@@ -227,7 +232,7 @@ Welcome."
 Creating a template group from a directory is easier:
 
 ```clojure
-(def g (basil.jvm/make-group-from-directory :prefix "templates/"))
+(def g (basil.public/make-group-from-directory :prefix "templates/"))
 ```
 
 The `:prefix` argument is optional and used to qualify the template filenames
@@ -244,7 +249,7 @@ from a directory. In most cases you would probably want to create a group from
 classpath:
 
 ```clojure
-(def g (basil.jvm/make-group-from-classpath :prefix "templates/"))
+(def g (basil.public/make-group-from-classpath :prefix "templates/"))
 ```
 
 Make sure the directory 'templates' is in classpath (under 'src' or 'resources'
