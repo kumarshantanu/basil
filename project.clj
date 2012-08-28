@@ -5,16 +5,10 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [;[org.clojure/clojure "1.4.0"]
                  [quiddity "0.1.0-SNAPSHOT"]]
-  :source-paths ["src"]
-  :test-paths   ["test"]
   :profiles {;; Clojure
-             :dev {:dependencies [[mini-test "0.1.0-SNAPSHOT"]]
-                   :source-paths ["src-jvm"]
-                   ;;:test-paths   ["test"]
-                   }
+             :dev {:dependencies [[mini-test "0.1.0-SNAPSHOT"]]}
              ;; CLJS testing
-             :jst {:source-paths ["src-cljs" "test"] ; "test-cljs-macro"
-                   ;; :test-paths   []
+             :jst {:source-paths ["test"]
                    ;; Enable the lein hooks for: clean, compile, test, and jar.
                    :hooks [leiningen.cljsbuild]
                    :cljsbuild {:crossovers [basil.core   basil.error  basil.group
