@@ -1,7 +1,7 @@
 (ns basil.run-tests
   (:require [basil.core-test         :as core-test]
             [basil.util              :as util]
-            [mini-test.testutil-cljs :as tu]))
+            [clip-test.testutil-cljs :as tu]))
 
 
 (defn ^:export run

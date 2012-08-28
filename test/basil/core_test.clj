@@ -6,11 +6,11 @@
             [basil.vars  :as vars])
   (:use [basil.testvars;*CLJSBUILD-REMOVE*;-cljs
          :only [slot-compiler]]
-        [mini-test.testutil;*CLJSBUILD-REMOVE*;-cljs
+        [clip-test.testutil;*CLJSBUILD-REMOVE*;-cljs
          :only [;*CLJSBUILD-REMOVE*;RuntimeException
                 read-str re-quote throw-msg try-catch error-msg]])
   (:use;*CLJSBUILD-REMOVE*;-macros
-    [mini-test.core;*CLJSBUILD-REMOVE*;-cljs
+    [clip-test.core;*CLJSBUILD-REMOVE*;-cljs
      :only [deftest testing is
             ;*CLJSBUILD-REMOVE*;thrown? thrown-with-msg?
             ]]))

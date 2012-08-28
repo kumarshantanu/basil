@@ -5,7 +5,7 @@
             [basil.slot  :as slot]
             [basil.types :as types]
             [basil.vars  :as vars])
-  (:use-macros ;;--not used in CLJS file--;*CLJSBUILD-REMOVE*;-macros
+  (:use-macros
     [basil.core-macro :only [defn-binding]]))
 
 

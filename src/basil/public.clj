@@ -8,7 +8,7 @@
             [basil.types :as types]
             [basil.util  :as util]
             [basil.vars  :as vars])
-  (:use ;;--not used--;*CLJSBUILD-REMOVE*;-macros
+  (:use
     [basil.core-macro :only [defn-binding]])
   (:import (java.io  File)
            (java.net URL)
