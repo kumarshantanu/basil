@@ -5,12 +5,15 @@
             [basil.util  :as util]
             [basil.vars  :as vars])
   (:use [basil.testvars;*CLJSBUILD-REMOVE*;-cljs
+         :only [slot-compiler]]
+        [mini-test.testutil;*CLJSBUILD-REMOVE*;-cljs
          :only [;*CLJSBUILD-REMOVE*;RuntimeException
-                slot-compiler]])
+                read-str re-quote throw-msg try-catch error-msg]])
   (:use;*CLJSBUILD-REMOVE*;-macros
-    [clojure.test;*CLJSBUILD-REMOVE*;-cljs
-     ;*CLJSBUILD-REMOVE*;:only [deftest testing is thrown? thrown-with-msg?]
-     ]))
+    [mini-test.core;*CLJSBUILD-REMOVE*;-cljs
+     :only [deftest testing is
+            ;*CLJSBUILD-REMOVE*;thrown? thrown-with-msg?
+            ]]))
 
 
 (defn run-testcases
@@ -26,7 +29,7 @@
   [& cases]
   (doseq [{:keys [name templt model handlers render]} cases]
     (is (thrown-with-msg?
-          RuntimeException (vars/re-quote render)
+          RuntimeException (if (string? render) (re-quote render) render)
           (public/parse-compile-render
             slot-compiler templt name (filter identity [model handlers])))
         name)))
@@ -248,7 +251,7 @@
   (doseq [{:keys [name model handlers render group]} cases]
     (let [tgp (public/compile-template-group slot-compiler group)]
       (is (thrown-with-msg?
-            RuntimeException (vars/re-quote render)
+            RuntimeException (re-quote render)
             (public/render-by-name tgp name (filter identity [model handlers])))
           name))))
 
@@ -305,5 +308,4 @@
   (test-slot-with-handler-calls)
   (test-parse-compile)
   (test-missing-locals)
-  (test-template-group)
-  )
+  (test-template-group))

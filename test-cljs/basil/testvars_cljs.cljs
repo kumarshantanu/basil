@@ -3,6 +3,3 @@
 
 
 (def slot-compiler cljs/slot-compiler)
-
-
-(def RuntimeException nil)
