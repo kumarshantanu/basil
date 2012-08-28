@@ -3,11 +3,8 @@
   :url "https://github.com/kumarshantanu/basil"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [;[org.clojure/clojure "1.4.0"]
-                 [quiddity "0.1.0-SNAPSHOT"]]
-  :profiles {;; Clojure
-             :dev {:dependencies [[mini-test "0.1.0-SNAPSHOT"]]}
-             ;; CLJS testing
+  :dependencies [[quiddity "0.1.0-SNAPSHOT"]]
+  :profiles {:tst {:dependencies [[mini-test "0.1.0-SNAPSHOT"]]}
              :jst {:source-paths ["test"]
                    ;; Enable the lein hooks for: clean, compile, test, and jar.
                    :hooks [leiningen.cljsbuild]
@@ -28,7 +25,7 @@
              :1.3 {:dependencies [[org.clojure/clojure "1.3.0"]]}
              :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.0-alpha4"]]}}
-  :aliases {"all" ["with-profile" "1.2,dev:1.3,dev:1.4,dev:1.5,dev"]
-            "dev" ["with-profile" "1.4,dev,jst"]}
+  :aliases {"all" ["with-profile" "1.2,tst:1.3,tst:1.4,tst:1.5,tst"]
+            "dev" ["with-profile" "1.4,tst,jst"]}
   :warn-on-reflection true
   :plugins [[lein-cljsbuild "0.2.6"]])
