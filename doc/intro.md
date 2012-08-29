@@ -159,7 +159,7 @@ Shadowing them with your own version is not recommended.
 
 |Function | Arguments       | Description |
 |---------|-----------------|-------------|
-|include  | t-name & locals | fetch template from group by name and render it as string, using `locals` if specified |
+|include  | t-name & contexts | fetch template from group by name and render it as string, using `contexts` if specified |
 
 
 ## Phases of a template
