@@ -92,37 +92,6 @@
   (entities nbsp-entities x))
 
 
-(defn for-each
-  "Given a map `locals`, a binding vector (keyword to sequable) `k-bindings`,
-  function `f` and a collection of arguments `args`,
-  * iterate through the sequable elements, re/binding corresponding keyword to
-    the element in each pass
-  * substitute in `args` the keywords bound in `k-bindings`
-  * apply function `f` to modified `args`
-  Example:
-  (for-each [:a [1 2]
-             :b [10 20]]
-    str \":a = \" :a \", :b = \" :b)"
-  ([locals k-bindings f args]
-    {:pre [(map? locals)
-           (coll? k-bindings)
-           (not (map? k-bindings))
-           (even? (count k-bindings))
-           (not (nil? f))
-           (or (nil? args) (coll? args))]}
-    (let [pairs (partition 2 k-bindings)
-          [[k s] & more] pairs]
-      (if (seq more)
-        (apply concat (for [each s]
-                        (apply for-each (merge locals {k each}) more f args)))
-        (for [each s]
-          (->> args
-               (map #(get (merge locals {k each}) % %))
-               (apply f))))))
-  ([k-bindings f args]
-    (for-each {} k-bindings f args)))
-
-
 (defn format-rows
   "Given a collection `rows` (each row will be turned into a string) and
   pairs of alternating head/tail tokens (repeated to match the `rows` count),
@@ -192,7 +161,7 @@
 
 (defn include
   "Find specified template by name in the current group and render it. Use the
-  locals if specified."
+  context if specified."
   ([template-name]
     (group/render-by-name* template-name))
   ([template-name & t-context-coll]
@@ -216,14 +185,6 @@
    :identity      identity
    :partial       partial
    :partiar       partiar
-   ;; conditionals and iteration (for the lack of macros)
-   :when          (fn [test f & more] (when     test (apply f more)))
-   :when-not      (fn [test f & more] (when-not test (apply f more)))
-   :for-each      (fn [k-bindings f & more] (for-each k-bindings f more))
-   :with-locals   (fn [context-coll f & args] {:pre [(every? map? context-coll)
-                                                     (not (nil? f))]}
-                    (binding [vars/*context-coll* (concat context-coll vars/*context-coll*)]
-                      (apply f args)))
    ;; formatting
    :format-rows   format-rows     ;; args -- [rows decors]
    :serial-decors serial-decors   ;; args -- [serial decor-format-coll]

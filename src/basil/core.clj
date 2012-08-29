@@ -7,7 +7,8 @@
             [basil.slot     :as slot]
             [basil.types    :as types]
             [basil.util     :as util]
-            [basil.vars     :as vars]))
+            [basil.vars     :as vars]
+            [quiddity.lib   :as qlib]))
 
 
 (defn rowcolpos
@@ -235,7 +236,7 @@
 (defn add-default-context
   "Append default context to the context collection."
   [context-coll]
-  (concat context-coll [lib/default-model lib/default-handlers]))
+  (concat context-coll [lib/default-model lib/default-handlers qlib/all]))
 
 
 (defn ^String render-template

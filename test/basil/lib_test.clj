@@ -24,9 +24,9 @@
 
 
 (defn render
-  [template t-name locals]
+  [template t-name context-coll]
   (public/parse-compile-render
-    slot-compiler template t-name locals))
+    slot-compiler template t-name context-coll))
 
 
 (def users ["foo" "bar"])
