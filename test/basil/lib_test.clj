@@ -102,7 +102,7 @@
                    [{:text "<a href='http://google.com'>Google</a>"}])))
     (is (= "Foo &amp; Bar"
            (render "<%(html-escape text)%>"
-                   "html-safe ignores nbsp"
+                   "html-escape ignores nbsp"
                    [{:text "Foo & Bar"}]))))
   (testing
     "html-nbsp"
