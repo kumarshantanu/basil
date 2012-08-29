@@ -28,7 +28,7 @@
   [name]
   (error/render-error
     (types/make-error-text
-      (format "No such template name/key: '%s'" name)
+      (format "No such template name/key: '%s'" (str name))
       (or vars/*slot-text* no-text))))
 
 

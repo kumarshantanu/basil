@@ -5,12 +5,15 @@
             [basil.types  :as types]
             [basil.util   :as util])
   (:use [basil.testvars;*CLJSBUILD-REMOVE*;-cljs
+         :only [slot-compiler]]
+        [clip-test.testutil;*CLJSBUILD-REMOVE*;-cljs
          :only [;*CLJSBUILD-REMOVE*;RuntimeException
-                slot-compiler]])
+                read-str re-quote throw-msg try-catch error-msg]])
   (:use;*CLJSBUILD-REMOVE*;-macros
-    [clojure.test;*CLJSBUILD-REMOVE*;-cljs
-     ;*CLJSBUILD-REMOVE*;:only [deftest testing is thrown? thrown-with-msg?]
-     ]))
+    [clip-test.core;*CLJSBUILD-REMOVE*;-cljs
+     :only [deftest testing is
+            ;*CLJSBUILD-REMOVE*;thrown? thrown-with-msg?
+            ]]))
 
 
 (deftest test-currying

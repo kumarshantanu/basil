@@ -3,7 +3,7 @@
   :url "https://github.com/kumarshantanu/basil"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  ;; :dependencies [[quiddity "0.1.0-SNAPSHOT"]]
+  :dependencies [[quiddity "0.1.0-SNAPSHOT"]]
   :profiles {:tst {:dependencies [[clip-test "0.1.0-SNAPSHOT"]]}
              :jst {:source-paths ["test"]
                    ;; Enable the lein hooks for: clean, compile, test, and jar.
@@ -11,7 +11,9 @@
                    :cljsbuild {:crossovers [basil.core   basil.error  basil.group
                                             basil.lib    basil.render basil.slot
                                             basil.types  basil.util   basil.vars
-                                            basil.core-test clip-test.internal]
+                                            basil.core-test basil.lib-test
+                                            quiddity.core quiddity.lib
+                                            clip-test.internal]
                                ;; Test command for running the unit tests
                                ;;     $ lein cljsbuild test
                                :test-commands {"unit" ["phantomjs"

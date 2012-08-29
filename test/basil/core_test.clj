@@ -112,24 +112,6 @@
       {:name   "--Only a slot with one keyword literal of length one"
        :templt "<% :f %>"
        :render ":f"}
-      {:name   "--Only a slot with one octal number literal"
-       :templt "<% 03456  %>"
-       :render "1838"}
-      {:name   "--Only a slot with one negative octal number literal"
-       :templt "<% -03456  %>"
-       :render "-1838"}
-      {:name   "--Only a slot with one hex number literal"
-       :templt "<% 0x2F  %>"
-       :render "47"}
-      {:name   "--Only a slot with one negative hex number literal"
-       :templt "<% -0x2F  %>"
-       :render "-47"}
-      {:name   "--Only a slot with one radix-notation number literal"
-       :templt "<% 32r2pu2v  %>"
-       :render "2947167"}
-      {:name   "--Only a slot with one radix-notation number literal"
-       :templt "<% -32r2pu2v  %>"
-       :render "-2947167"}
       {:name   "--Only a slot with one integer literal"
        :templt "<% 3456  %>"
        :render "3456"}
@@ -229,12 +211,12 @@
        :templt "<% foo %>"
        :model {}
        :handlers {}
-       :render "[Render] No such local-key 'foo' in 'missing lone symbol' at row 1, col 3 (pos 3)"}
+       :render #"\[Render\] No such key \'foo\' .*in \'missing lone symbol\' at row 1, col 3 \(pos 3\)"}
       {:name "missing fn symbol"
        :templt "<% (foo) %>"
        :model {}
        :handlers {}
-       :render "[Render] No such local-key 'foo' in 'missing fn symbol' at row 1, col 3 (pos 3)"})))
+       :render #"\[Render\] No such key \'foo\' .*in \'missing fn symbol\' at row 1, col 3 \(pos 3\)"})))
 
 
 (defn run-groupcases
@@ -251,7 +233,7 @@
   (doseq [{:keys [name model handlers render group]} cases]
     (let [tgp (public/compile-template-group slot-compiler group)]
       (is (thrown-with-msg?
-            RuntimeException (re-quote render)
+            RuntimeException (if (string? render) (re-quote render) render)
             (public/render-by-name tgp name (filter identity [model handlers])))
           name))))
 
@@ -294,7 +276,7 @@
          :render "[Render] No such template name/key: ':c' in ':b' at row 1, col 3 (pos 3)"
          :group  group}
         {:name   :d
-         :render "[Render] No such local-key 'foo' in ':e' at row 1, col 3 (pos 3)"
+         :render #"\[Render\] No such key \'foo\' .*in \':e\' at row 1, col 3 \(pos 3\)"
          :group group}))))
 
 

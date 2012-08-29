@@ -1,8 +1,9 @@
 (ns basil.slot
-  (:require [basil.error :as error]
-            [basil.types :as types]
-            [basil.util  :as util]
-            [basil.vars  :as vars]))
+  (:require [basil.error   :as error]
+            [basil.types   :as types]
+            [basil.util    :as util]
+            [basil.vars    :as vars]
+            [quiddity.core :as quid]))
 
 
 (defn locals-coll?
@@ -10,64 +11,22 @@
   (and (some #(% x) [list? vector? set? seq? nil?])
        (every? map? x)))
 
-(defn local-val
-  "Given collection of locals `locals-coll` and key `k`, retrieve the value of
-  `k`. Return error if `k` not found."
-  [k slot-text locals-coll] {:pre [(symbol? k)
-                                   (types/slot-text? slot-text)
-                                   (locals-coll? locals-coll)]}
-  (let [r (some (fn [coll]
-                  (cond
-                    (contains? coll k)            [(get coll k)]
-                    (and (symbol? k)
-                         (contains? coll
-                                    (keyword k))) [(get coll (keyword k))]))
-                locals-coll)]
-    (if r (first r)
-      (:text (error/render-error
-               (types/make-error-text
-                 (format "No such local-key '%s'" k)
-                 (:row slot-text) (:col slot-text) (:pos slot-text)))))))
-
-
-(declare eval-slot)
-
-
-(defn local-val-coll
-  "Given an S-expression `sexp` that is a collection, and a collection of locals
-  `locals-coll`, return the `sexp` collection with reified values."
-  [sexp slot-text locals-coll] {:pre [(coll? sexp)
-                                      (types/slot-text? slot-text)
-                                      (locals-coll? locals-coll)]}
-  (let [coll-fn (cond
-                  (vector? sexp) vec
-                  (set? sexp)    set
-                  :otherwise     list*)]
-    (coll-fn (map #(eval-slot % slot-text locals-coll) sexp))))
-
-
-(defn eval-slot
-  [sexp slot-text locals-coll] {:pre [(types/slot-text? slot-text)
-                                      (locals-coll? locals-coll)]}
-  (binding [vars/*slot-text* slot-text]
-    (cond
-      ;; symbol, hence lookup in locals
-      (symbol? sexp)    (local-val sexp slot-text locals-coll)
-      ;; function call
-      (and (list? sexp)
-           (seq sexp))  (let [rexp (local-val-coll sexp slot-text locals-coll)]
-                          (apply (first rexp) (rest rexp)))
-      ;; plain old collection
-      (coll? sexp)      (local-val-coll sexp slot-text locals-coll)
-      ;; primitive
-      :otherwise        sexp)))
+(defn make-quiddity-err-handler
+  [slot-text]
+  (fn [msg]
+    (error/render-error
+      (types/make-error-text
+        (str msg)
+        (:row slot-text) (:col slot-text) (:pos slot-text)))))
 
 
 (defn eval-entire-slot
   "Evaluate entire slot and return the value (string)."
   [sexp slot-text locals-coll]
-  (let [to-str (local-val (symbol 'default) slot-text locals-coll)]
-    (to-str (eval-slot sexp slot-text locals-coll))))
+  (binding [vars/*slot-text*     slot-text
+            quid/*error-handler* (make-quiddity-err-handler slot-text)]
+    (let [to-str (quid/env-get :default locals-coll)]
+      (to-str (quid/evaluate sexp locals-coll)))))
 
 
 (defn make-slot-compiler*
