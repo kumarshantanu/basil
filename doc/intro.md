@@ -2,9 +2,9 @@
 
 TODO: write [great documentation](http://jacobian.org/writing/great-documentation/what-to-write/)
 
-Basil is a templating library for Clojure. You may use it for generating HTML,
-email content, SQL statements and so on. The dynamic parts of Basil templates
-look and feel like Clojure expressions, which is by design.
+Basil is a templating library for Clojure and ClojureScript. You may use it for
+generating HTML, email content, SQL statements and so on. The dynamic parts of
+Basil templates look and feel like Clojure expressions, which is by design.
 
 Basil templates contain static and dynamic parts. As a user, you may choose
 between two methods of using templates:
@@ -63,25 +63,18 @@ Have a nice day.
 ### Slots in detail
 
 As you can notice from the examples above, _slot_ text looks like Clojure
-expressions. However, a _slot_ text must conform to only a very tiny subset of
-Clojure. Notably,
+expressions. Basil uses [Quiddity](https://github.com/kumarshantanu/quiddity)
+to evaluate the slots. Therefore, a _slot_ text must conform to only the subset
+of Clojure that Quiddity supports. Notably,
 
 * Templates have the notion of _context_, which is a list of maps that is used
   to lookup dynamic values when rendering a slot.
-* While rendering, symbols in a _slot_ text are searched recursively throughout
-  an expression, looked up in the _context_ (by keyword) and replaced with
-  corresponding values.
-* Symbols in a _slot_ text that do not exist in the _context_ result in error
-  during rendering.
-* _Slots_ may not use 'list' as a data structure for literals; they may use
-  only vectors, sets and maps as data structures for literals.
-* _Slots_ do not have lexical scope and the entire expression is evaluated at
-  once.
-* Since value of a macro cannot be determined, it cannot be stored in the
-  _context_; consequently, a _slot_ text may not make use of them.
-* Due to the constraints mentioned above, symbols in _slot_ text may point to
-  only data and functions. Fortunately, this helps to keep templates as
-  logic-less and simple as possible.
+* While rendering, symbols in a _slot_ text are looked up in the _context_ when
+  appropriate and replaced with corresponding values.
+* Symbols in a _slot_ text not found in the _context_ during lookup result in
+  error during rendering.
+* Since values of special forms and macros cannot be determined, they cannot be
+  stored in the _context_.
 
 
 ### Filters
@@ -99,7 +92,24 @@ Recommended approach to set up the _context_ is to have
 * required variables populated in the _context_ on a per-template or per
   use-case basis.
 
-#### Built-in functions
+#### Built-ins from Quiddity
+
+Basil includes the following built-ins from Quiddity:
+
+* Special forms equivalent
+  * `if`
+  * `do`
+  * `quote`
+* Macros equivalent
+  * `if-not`
+  * `when`
+  * `when-not`
+  * `let`
+  * `for-each` (same as `for` without `:let`, `:when`, `:while` forms)
+  * `and`
+  * `or`
+
+#### Built-in functions in Basil
 
 There are several built-in functions that you get as a part of the _context_.
 Shadowing them with your own version is not recommended.
@@ -111,7 +121,7 @@ Shadowing them with your own version is not recommended.
 |-----------|-----------|-------------|
 |apply      | f & args  | Same as Apply clojure.core/apply |
 |auto-str   | x         | Converts `x` (if collection, interposing with newline) to string. |
-|default    | x         | Applied when a _slot_ has only data, e.g. <% foo %> |
+|default    | x         | Applied to the result of slot evaluation to convert to string |
 |identity   | x         | Same as clojure.core/identity |
 |partial    | f & args  | Same as clojure.core/partial  |
 |seq        | x         | Same as clojure.core/seq      |
@@ -119,16 +129,6 @@ Shadowing them with your own version is not recommended.
 |str-join   | j coll    | Same as clojure.string/join   |
 |str-br     | coll      | Same as `(partial clojure.string/join "<br/>\n")` |
 |str-newline| coll      | Same as `(partial clojure.string/join "\n")`      |
-
-
-**Conditionals**
-
-|Function   |Arguments            |Description|
-|-----------|---------------------|-----------|
-|when       | test f & args       | When `test` is true, invoke `f` with `args` |
-|when-not   | test f & args       | When `test` is false, invoke `f` with `args` |
-|for-each   | k-bindings f & args | Iterate over collection(s) and invoke `f` with `args` on each pass |
-|with-locals| locals f & args     | Invoke `f` with `args` in context of specified locals|
 
 
 **Formatting**
@@ -149,10 +149,10 @@ Shadowing them with your own version is not recommended.
 
 **HTML-escaping**
 
-|Function | Arguments | Description |
-|---------|-----------|-------------|
-|html-safe| x         | Encode as HTML-safe string |
-|html-nbsp| x         | Encode as HTML-safe string, also convert space to `&nbsp;` |
+|Function   | Arguments | Description |
+|-----------|-----------|-------------|
+|html-escape| x         | Encode as HTML-escaped string |
+|html-nbsp  | x         | Encode as HTML-escaped string, also convert space to `&nbsp;` |
 
 
 **Including other templates**

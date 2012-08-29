@@ -1,6 +1,6 @@
 # basil
 
-Basil is a flavored templating library for Clojure.
+Basil is a flavored templating library for Clojure and ClojureScript.
 
 **Important:** Consider this library in _ALPHA_ until this notice is removed.
 API and implementation will change in incompatible ways. You have been warned.
@@ -10,8 +10,11 @@ API and implementation will change in incompatible ways. You have been warned.
 
 On Clojars: https://clojars.org/basil
 
-Leiningen dependency: `[basil "0.2.0"]`
+Leiningen dependency: `[basil "0.3.0"]`
 
+Supported Clojure versions: 1.2, 1.3, 1.4, 1.5
+
+Tested with lein-cljsbuild version: 0.2.6
 
 This page has only elementary documentation.
 [Intro page](https://github.com/kumarshantanu/basil/blob/master/doc/intro.md)
@@ -52,7 +55,7 @@ _dynamic data_. Few examples:
   </tr>
   <tr>
     <td><pre>foo
-&lt;% (when-not (seq names) identity "No names!") %&gt;
+&lt;% (when-not (seq names) "No names!") %&gt;
 bar</pre></td>
     <td>{:names []}</td>
     <td>foo<br/>
@@ -61,7 +64,7 @@ bar</td>
   </tr>
   <tr>
     <td><pre>foo
-&lt;% (when (seq names) str-br names) %&gt;
+&lt;% (when (seq names) (str-br names)) %&gt;
 bar</pre></td>
     <td>{:names ["Lucy" "Brian"]}</td>
     <td>foo<br/>
@@ -71,7 +74,7 @@ bar</td>
   </tr>
   <tr>
     <td><pre>foo
-&lt;% (for-each [:b names] str "name=" :b) %&gt;
+&lt;% (for-each [b names] (str "name=" b)) %&gt;
 bar</pre></td>
     <td>{:names ["Tom" "Jane" "Larry"]}</td>
     <td>foo<br/>
@@ -82,10 +85,10 @@ bar</td>
   </tr>
   <tr>
     <td><pre>foo
-&lt;% (for-each [:a [1 2]
-              :b names]
-     str ":a=" :a
-         ", name=" :b) %&gt;
+&lt;% (for-each [a [1 2]
+              b names]
+     (str ":a=" a
+          ", name=" b)) %&gt;
 bar</pre></td>
     <td>{:names ["Tom" "Jane" "Larry"]}</td>
     <td>foo<br/>

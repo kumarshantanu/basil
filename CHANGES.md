@@ -1,9 +1,10 @@
 #Changes and TODO
 
 
-## 2012-????-?? / 0.3.0
+## [TODO] 2012-????-?? / 0.4.0
 
-* [TODO] ClojureScript support
+* [TODO] Nested template sections
+* [TODO] Template distribution mechanism
 * [TODO] Investigate abstracting out string concatenation
   * Auto-select efficient JVM/CLJS specific concatenation
   * Use java.lang.StringBuilder on the JVM
@@ -15,8 +16,14 @@
     (.append sb "world")
     (.toString sb))
 ```
-
 * [TODO] Filter fns for reversing HTML entities
+
+
+## 2012-August-30 / 0.3.0
+
+* ClojureScript support (via _clip-test_)
+* Use _Quiddity_ to eval slots
+* Update context built-ins (replace conditionals with Quiddity built-ins)
 
 
 ## 2012-August-21 / 0.2.0
