@@ -21,8 +21,8 @@
 
 
 (def ^{:dynamic true
-       :doc     "Collections of locals for the current rendering"}
-  *locals-coll* [])
+       :doc     "Collection of context for the current rendering"}
+  *context-coll* [])
 
 
 ;; ----- Platform specific -----

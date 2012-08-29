@@ -6,7 +6,7 @@
             [quiddity.core :as quid]))
 
 
-(defn locals-coll?
+(defn context-coll?
   [x]
   (and (some #(% x) [list? vector? set? seq? nil?])
        (every? map? x)))
@@ -22,11 +22,11 @@
 
 (defn eval-entire-slot
   "Evaluate entire slot and return the value (string)."
-  [sexp slot-text locals-coll]
+  [sexp slot-text context-coll]
   (binding [vars/*slot-text*     slot-text
             quid/*error-handler* (make-quiddity-err-handler slot-text)]
-    (let [to-str (quid/env-get :default locals-coll)]
-      (to-str (quid/evaluate sexp locals-coll)))))
+    (let [to-str (quid/env-get :default context-coll)]
+      (to-str (quid/evaluate sexp context-coll)))))
 
 
 (defn make-slot-compiler*

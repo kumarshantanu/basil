@@ -232,33 +232,33 @@
 ;; ===== Template Rendering =====
 
 
-(defn add-default-locals
-  "Append default locals to the locals collection."
-  [locals-coll]
-  (concat locals-coll [lib/default-model lib/default-handlers]))
+(defn add-default-context
+  "Append default context to the context collection."
+  [context-coll]
+  (concat context-coll [lib/default-model lib/default-handlers]))
 
 
 (defn ^String render-template
-  "Render given `compiled-template` using `locals-coll`.
+  "Render given `compiled-template` using `context-coll`.
   Note: basil.error/*error* must be already rebound before this call."
-  [compiled-template locals-coll]
+  [compiled-template context-coll]
   {:post [(string? %)]
    :pre  [(types/compiled-template? compiled-template)
-          (slot/locals-coll? locals-coll)]}
+          (slot/context-coll? context-coll)]}
   (binding [vars/*template-name* (:name compiled-template)
-            vars/*locals-coll*   (add-default-locals locals-coll)]
+            vars/*context-coll*   (add-default-context context-coll)]
     (render/render-template* compiled-template)))
 
 
 (defn render-by-name
   "Given a template group, find the compiled template by name and render it.
   Note: basil.error/*error* must be already rebound before this call."
-  [template-group template-name locals-coll]
+  [template-group template-name context-coll]
   {:post [(string? %)]
    :pre  [(group/template-group? template-group)
-          (slot/locals-coll? locals-coll)]}
+          (slot/context-coll? context-coll)]}
   (binding [vars/*template-name*   template-name
-            vars/*locals-coll*     (add-default-locals locals-coll)
+            vars/*context-coll*     (add-default-context context-coll)
             group/*template-group* template-group]
     (group/render-by-name* template-name)))
 
@@ -266,6 +266,6 @@
 (defn parse-compile-render
   "Convenience function to parse, compile and render a template in one step.
   Note: basil.error/*error* must be already rebound before this call."
-  [slot-reader ^String template ^String template-name locals-coll]
+  [slot-reader ^String template ^String template-name context-coll]
   (-> (parse-compile slot-reader template template-name)
-      (render-template locals-coll)))
+      (render-template context-coll)))

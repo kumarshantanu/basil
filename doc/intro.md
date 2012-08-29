@@ -10,10 +10,10 @@ Basil templates contain static and dynamic parts. As a user, you may choose
 between two methods of using templates:
 
 * **Method 1:** First compile a template. Subsequently, render a compiled
-  template using _context_ (also called _locals_) data.
+  template using _context_ (also called _environment_) data.
 * **Method 2:** Create a _template group_ that returns compiled templates on
   demand. Subsequently, fetch a compiled template by name and render that using
-  _context_ (also called _locals_) data.
+  _context_ (also called _environment_) data.
 
 
 ## Composition of a template

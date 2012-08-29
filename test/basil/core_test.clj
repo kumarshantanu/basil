@@ -203,9 +203,9 @@
     (is (types/compiled-template? c))))
 
 
-(deftest test-missing-locals
+(deftest test-missing-context
   (testing
-    "missing locals"
+    "missing context"
     (run-testcases-thrown
       {:name "missing lone symbol"
        :templt "<% foo %>"
@@ -289,5 +289,5 @@
   (test-slot-with-attributes)
   (test-slot-with-handler-calls)
   (test-parse-compile)
-  (test-missing-locals)
+  (test-missing-context)
   (test-template-group))

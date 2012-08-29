@@ -195,9 +195,9 @@
   locals if specified."
   ([template-name]
     (group/render-by-name* template-name))
-  ([template-name & locals]
-    {:pre [(every? map? locals)]}
-    (binding [vars/*locals-coll*   (concat locals vars/*locals-coll*)]
+  ([template-name & t-context-coll]
+    {:pre [(every? map? t-context-coll)]}
+    (binding [vars/*context-coll*   (concat t-context-coll vars/*context-coll*)]
       (group/render-by-name* template-name))))
 
 
@@ -220,9 +220,9 @@
    :when          (fn [test f & more] (when     test (apply f more)))
    :when-not      (fn [test f & more] (when-not test (apply f more)))
    :for-each      (fn [k-bindings f & more] (for-each k-bindings f more))
-   :with-locals   (fn [locals f & args] {:pre [(every? map? locals)
-                                               (not (nil? f))]}
-                    (binding [vars/*locals-coll* (concat locals vars/*locals-coll*)]
+   :with-locals   (fn [context-coll f & args] {:pre [(every? map? context-coll)
+                                                     (not (nil? f))]}
+                    (binding [vars/*context-coll* (concat context-coll vars/*context-coll*)]
                       (apply f args)))
    ;; formatting
    :format-rows   format-rows     ;; args -- [rows decors]

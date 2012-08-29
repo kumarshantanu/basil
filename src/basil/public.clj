@@ -134,7 +134,7 @@
 
 
 (defn clojure-core-publics
-  "Return the public vars in clojure.core as a map, suitable for use as locals."
+  "Return the public vars in clojure.core as a map, suitable for use as context."
   []
   (reduce (fn [m [n v]]
             (merge m {(keyword n) (deref v)}))

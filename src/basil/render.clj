@@ -7,4 +7,4 @@
 (defn render-template*
   [compiled-template]
   {:pre [(types/compiled-template? compiled-template)]}
-  (util/redstr (map #(% vars/*locals-coll*) (:content compiled-template))))
+  (util/redstr (map #(% vars/*context-coll*) (:content compiled-template))))
