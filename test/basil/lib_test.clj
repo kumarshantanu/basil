@@ -95,13 +95,13 @@
 
 (deftest test-html-escaping
   (testing
-    "html-safe"
+    "html-escape"
     (is (= "&lt;a href='http://google.com'&gt;Google&lt;/a&gt;"
-           (render "<%(html-safe text)%>"
-                   "html-safe escapes"
+           (render "<%(html-escape text)%>"
+                   "html-escape escapes"
                    [{:text "<a href='http://google.com'>Google</a>"}])))
     (is (= "Foo &amp; Bar"
-           (render "<%(html-safe text)%>"
+           (render "<%(html-escape text)%>"
                    "html-safe ignores nbsp"
                    [{:text "Foo & Bar"}]))))
   (testing

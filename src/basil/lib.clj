@@ -79,14 +79,14 @@
                           {(first " ") "&nbsp;"}))
 
 
-(defn html-safe
-  "Given a string `x`, return HTML-safe version of `x`."
+(defn html-escape
+  "Given a string `x`, return HTML-escaped version of `x`."
   [x] {:pre [(string? x)]}
   (entities html-entities x))
 
 
 (defn html-nbsp
-  "Given a string `x`, return HTML-safe version of `x` such that spaces are
+  "Given a string `x`, return HTML-escaped version of `x` such that spaces are
   converted to &nbsp;."
   [x] {:pre [(string? x)]}
   (entities nbsp-entities x))
@@ -199,7 +199,7 @@
                                        (serial-decors vals)
                                        (format-rows rows)))
    ;; HTML-escaping
-   :html-safe     html-safe
+   :html-escape   html-escape
    :html-nbsp     html-nbsp
    ;; including other templates
    :include       include})
