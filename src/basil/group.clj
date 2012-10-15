@@ -20,6 +20,11 @@
   (satisfies? TemplateGroup group))
 
 
+(defn get-template
+  [group name] {:pre (template-group? group)}
+  (obtain group name))
+
+
 (def no-text (types/make-static-text "" 0 0 0))
 
 
@@ -65,6 +70,38 @@
   (make-group #(if (contains? group %)
                  [(get group %) nil]
                  [nil (no-such-name %)])))
+
+
+(defn make-cached-group
+  "Given group        template group
+         f-now        (no-arg fn that returns current time in millis),
+     and cache-millis (long)
+  create a cached group that re-obtains template only after cache-millis or
+  more milliseconds have elapsed since last obtain."
+  [group f-now cache-millis] {:pre [(template-group? group)
+                                    (fn? f-now)
+                                    (number? cache-millis)]}
+  (let [last-read (atom [(f-now) {}])  ;; flush-ts , name => [timestamp value]
+        update-ca (fn [[flush-ts last-map] name]
+                    (let [now (f-now)
+                          [flush-ts last-map]
+                          (if (< (- now flush-ts) cache-millis)
+                            [flush-ts last-map]
+                            [now (reduce (fn [m [k [t v]]]
+                                           (merge m (when (< (- now t)
+                                                             cache-millis)
+                                                      {k [t v]})))
+                                         {} last-map)])]
+                      [flush-ts (if (let [[ts value] (get last-map name)]
+                                      (and ts (< (- now ts) cache-millis) value))
+                                  last-map
+                                  (assoc last-map
+                                         name [now (get-template group name)]))]))]
+    (if (not (pos? cache-millis))
+      group
+      (make-group (fn [name] (-> last-read
+                               (swap! update-ca name)
+                               (get-in [1 name 1])))))))
 
 
 (def ^{:dynamic true
