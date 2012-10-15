@@ -51,30 +51,6 @@
 ;; ----- End of public functions from basil.core
 
 
-(defn make-cached-group
-  "Given f-now        (no-arg fn that returns current time in millis),
-         f-obtain     (as in basil.group/make-group),
-     and cache-millis (long)
-  create a cached group that re-obtains template only after cache-millis or
-  more milliseconds have elapsed since last obtain."
-  [f-now f-obtain cache-millis]
-  (let [is-cache? (zero? cache-millis)
-        last-read (ref {})
-        find-last #(get @last-read %)
-        kill-last #(dosync (alter last-read dissoc %))
-        save-last (fn [k v] (dosync (alter last-read assoc k [(f-now) v])))]
-    (group/make-group (fn [name]
-                        (if-let [cache-value (let [[t v] (find-last name)]
-                                               (and is-cache? t
-                                                    (< (- (f-now) t) cache-millis)
-                                                    v))]
-                          cache-value
-                          (let [[t e] (f-obtain name)]
-                            (if e (kill-last name)
-                              (save-last name [t e]))
-                            [t e]))))))
-
-
 (defn parse-compile-resource
   "Parse and compile the template after loading it"
   [resource-name resource-ptr & args] {:post [(types/compiled-template? %)]
@@ -98,11 +74,12 @@
               (not (neg? cache-millis)))]}
   (let [cnam (partial str prefix)
         args (flatten (seq (dissoc opt :cache-millis)))]
-    (make-cached-group
+    (group/make-cached-group
+      (group/make-group
+        #(let [rname (cnam %)
+               rfile (io/as-file rname)]
+           [(apply parse-compile-resource rname rfile args) nil]))
       #(System/currentTimeMillis)
-      #(let [rname (cnam %)
-             rfile (io/as-file rname)]
-         [(apply parse-compile-resource rname rfile args) nil])
       cache-millis)))
 
 
@@ -125,11 +102,12 @@
                (util/redstr (drop-while #(= % \/) s)))
         cnam (partial (comp nols str) prefix)
         args (flatten (seq (dissoc opt :prefix :cache-millis :as-url)))]
-    (make-cached-group
+    (group/make-cached-group
+      (group/make-group
+        #(let [rname (cnam %)
+               r-url  (as-url rname)]
+           [(apply parse-compile-resource rname r-url args) nil]))
       #(System/currentTimeMillis)
-      #(let [rname (cnam %)
-             r-url  (as-url rname)]
-         [(apply parse-compile-resource rname r-url args) nil])
       cache-millis)))
 
 
