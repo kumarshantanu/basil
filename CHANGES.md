@@ -3,6 +3,9 @@
 
 ## [TODO] 2012-????-?? / 0.4.0
 
+* [TODO] Wrap fn/evaluator invocation exceptions with Basil template info
+  * originating from Quiddity (due to wrong number/type of args)
+  * originating from user-supplied fns/evaluators/values
 * [TODO] Nested template sections
 * [TODO] Template distribution mechanism
 * [TODO] Investigate abstracting out string concatenation
@@ -18,6 +21,13 @@
 ```
 * [TODO] Filter fns for reversing HTML entities
 
+
+## 2012-October-16 / 0.4.0
+
+* Common cached-group feature
+* Update dependencies
+  * Quiddity 0.2.0
+  * clip-test 0.2.0
 
 ## 2012-August-30 / 0.3.0
 
