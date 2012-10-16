@@ -97,17 +97,26 @@ Recommended approach to set up the _context_ is to have
 Basil includes the following built-ins from Quiddity:
 
 * Special forms equivalent
-  * `if`
   * `do`
+  * `if`
   * `quote`
 * Macros equivalent
+  * `->`
+  * `->>`
+  * `and`
+  * `case`
+  * `cond`
+  * `condp`
+  * `fn` with destructuring, without pre and post conditions
+  * `for-each`  with destructuring (same as `for` without `:let`, `:when`, `:while` forms)
   * `if-not`
+  * `let` with destructuring
+  * `or`
   * `when`
   * `when-not`
-  * `let`
-  * `for-each` (same as `for` without `:let`, `:when`, `:while` forms)
-  * `and`
-  * `or`
+  * `while`
+* Function equivalent
+  * `deref` a.k.a `@`
 
 #### Built-in functions in Basil
 
@@ -203,7 +212,12 @@ groups.
 
 Basil supports creating template groups from a number of sources. At its core,
 a template group is a protocol that anybody can use to implement own variety of
-template groups.
+template groups. The following functions can help you create/combine groups:
+
+* `(basil.group/make-group [f-obtain])` (`f-obtain` is arity-1 fn; returns `[template nil]` or `[nil error]`)
+* `(basil.group/make-group-union [coll-of-groups])`
+* `(basil.group/make-group-from-map [m])` (`m` is a map)
+* `(basil.group/make-cached-group [group f-now cache-millis])` (`f-now` is a arity-0 fn; returns current time in ms)
 
 ### From a map
 

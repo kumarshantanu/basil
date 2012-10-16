@@ -1,6 +1,6 @@
 # basil
 
-Basil is a flavored templating library for Clojure and ClojureScript.
+Basil is a general purpose template library for Clojure and ClojureScript.
 
 **Important:** Consider this library in _ALPHA_ until this notice is removed.
 API and implementation will change in incompatible ways. You have been warned.
@@ -10,11 +10,11 @@ API and implementation will change in incompatible ways. You have been warned.
 
 On Clojars: https://clojars.org/basil
 
-Leiningen dependency: `[basil "0.3.0"]`
+Leiningen dependency: `[basil "0.4.0"]`
 
 Supported Clojure versions: 1.2, 1.3, 1.4, 1.5
 
-Tested with lein-cljsbuild version: 0.2.6
+Tested with lein-cljsbuild version: 0.2.8
 
 This page has only elementary documentation.
 [Intro page](https://github.com/kumarshantanu/basil/blob/master/doc/intro.md)
