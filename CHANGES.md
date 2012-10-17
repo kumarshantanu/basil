@@ -1,7 +1,7 @@
 #Changes and TODO
 
 
-## [TODO] 2012-????-?? / 0.4.0
+## [TODO] 2012-????-?? / 0.5.0
 
 * [TODO] Wrap fn/evaluator invocation exceptions with Basil template info
   * originating from Quiddity (due to wrong number/type of args)
