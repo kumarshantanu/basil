@@ -53,9 +53,10 @@ A template containing more static and slot text:
 
 ```
 Hello, <% name %>!
-<% (when-not (seq orders) identity "You have no orders.") %>
-<% (when (seq orders) str "You have " (count orders) " orders:") %>
-<% (for-each [:each orders] order-detail :each) %>
+<% (when-not (seq orders) "You have no orders.") %>
+<% (when (seq orders) (str "You have "
+                           (count orders) " orders:")) %>
+<% (for-each [each orders] (order-detail each)) %>
 
 Have a nice day.
 ```
