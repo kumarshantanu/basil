@@ -1,10 +1,10 @@
-(defproject basil "0.4.0"
+(defproject basil "0.5.0-SNAPSHOT"
   :description "A general purpose template library for Clojure"
   :url "https://github.com/kumarshantanu/basil"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[quiddity "0.2.0"]]
-  :profiles {:tst {:dependencies [[clip-test "0.2.0"]]}
+  :profiles {:tst {:dependencies [[clip-test "0.2.2"]]}
              :jst {:source-paths ["test"]
                    ;; Enable the lein hooks for: clean, compile, test, and jar.
                    :hooks [leiningen.cljsbuild]
@@ -28,8 +28,8 @@
              :1.2 {:dependencies [[org.clojure/clojure "1.2.1"]]}
              :1.3 {:dependencies [[org.clojure/clojure "1.3.0"]]}
              :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
-             :1.5 {:dependencies [[org.clojure/clojure "1.5.0-alpha6"]]}}
+             :1.5 {:dependencies [[org.clojure/clojure "1.5.0-alpha7"]]}}
   :aliases {"all" ["with-profile" "1.2,tst:1.3,tst:1.4,tst:1.5,tst"]
             "dev" ["with-profile" "1.4,tst,jst"]}
   :warn-on-reflection true
-  :plugins [[lein-cljsbuild "0.2.8"]])
+  :plugins [[lein-cljsbuild "0.2.9"]])
