@@ -10,7 +10,7 @@ API and implementation will change in incompatible ways. You have been warned.
 
 On Clojars: https://clojars.org/basil
 
-Leiningen dependency: `[basil "0.4.0"]`
+Leiningen dependency: `[basil "0.4.1"]`
 
 Supported Clojure versions: 1.2, 1.3, 1.4, 1.5
 
@@ -127,6 +127,6 @@ On Twitter: [@kumarshantanu](http://twitter.com/kumarshantanu)
 
 ## License
 
-Copyright © 2012 Shantanu Kumar
+Copyright © 2012-2013 Shantanu Kumar
 
 Distributed under the Eclipse Public License, the same as Clojure.
