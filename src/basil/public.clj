@@ -56,8 +56,7 @@
   [resource-name resource-ptr & args] {:post [(types/compiled-template? %)]
                                        :pre  [(string? resource-name)
                                               (not (nil? resource-ptr))]}
-  (apply core/parse-compile slot-compiler (slurp resource-ptr) resource-name
-         args))
+  (core/parse-compile slot-compiler (slurp resource-ptr) resource-name))
 
 
 (defn make-group-from-directory
