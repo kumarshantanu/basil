@@ -22,12 +22,18 @@
 * [TODO] Filter fns for reversing HTML entities
 
 
+## 2013-June-24 / 0.4.1
+
+* Fix issue where missing file did not lead to a meaningful error message
+
+
 ## 2012-October-16 / 0.4.0
 
 * Common cached-group feature
 * Update dependencies
   * Quiddity 0.2.0
   * clip-test 0.2.0
+
 
 ## 2012-August-30 / 0.3.0
 

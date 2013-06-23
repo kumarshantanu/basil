@@ -1,4 +1,4 @@
-(defproject basil "0.4.0"
+(defproject basil "0.4.1"
   :description "A general purpose template library for Clojure"
   :url "https://github.com/kumarshantanu/basil"
   :license {:name "Eclipse Public License"
@@ -28,8 +28,8 @@
              :1.2 {:dependencies [[org.clojure/clojure "1.2.1"]]}
              :1.3 {:dependencies [[org.clojure/clojure "1.3.0"]]}
              :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
-             :1.5 {:dependencies [[org.clojure/clojure "1.5.0-alpha6"]]}}
+             :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}}
   :aliases {"all" ["with-profile" "1.2,tst:1.3,tst:1.4,tst:1.5,tst"]
-            "dev" ["with-profile" "1.4,tst,jst"]}
+            "dev" ["with-profile" "1.5,tst,jst"]}
   :warn-on-reflection true
   :plugins [[lein-cljsbuild "0.2.8"]])
